@@ -164,7 +164,7 @@ export default function UploadScreen({ onDataLoaded, onTriggerMock, CATEGORIES, 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', width: '100vw', background: '#f1f5f9', fontFamily: 'sans-serif', padding: '20px', boxSizing: 'border-box' }}>
       <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', textAlign: 'center', maxWidth: '500px', width: '100%' }}>
-        <h1 style={{ fontSize: '24px', color: '#1e293b', marginBottom: '8px', fontWeight: '700' }}>GeoVizBR</h1>
+        <h1 style={{ fontSize: '24px', color: '#1e293b', marginBottom: '8px', fontWeight: '700' }}>Brasil Map</h1>
         <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '30px' }}>Carregue a base de dados para visualização geográfica</p>
 
         <label style={{ display: 'block', background: '#00A950', color: '#fff', padding: '14px 20px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', marginBottom: '16px', transition: 'background 0.2s' }}>
