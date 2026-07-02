@@ -44,7 +44,7 @@ export default function Topbar({
           <SearchIcon />
           <input 
             type="text" 
-            placeholder="Pesquisar colaborador por nome..." 
+            placeholder="Pesquisar por nome, número ou categoria..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -102,10 +102,13 @@ export default function Topbar({
                 className="search-result-item"
                 onMouseDown={() => onPersonSelect(person)}
               >
-                <div className="result-name">{person.fullName}</div>
-                <div className="result-location">{person.address.full}</div>
+                <div className="result-name">{person.name}</div>
+                <div className="result-location">
+                  {person.nNumber} · {person.city}
+                </div>
                 <div className="result-meta">
-                  {person.address.city}, {person.address.state}
+                  <span className="result-cat" style={{ color: person.category?.color }}>{person.category?.acronym}</span>
+                  {person.state}
                 </div>
               </div>
             ))

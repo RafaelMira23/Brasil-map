@@ -1,18 +1,35 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON, useMapEvents } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import { MapContainer, TileLayer, Marker, useMap, GeoJSON, useMapEvents, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default Leaflet icon issues
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-});
+const createPersonIcon = (color, size = 12) => {
+  return L.divIcon({
+    html: `<div style="
+      background:${color};
+      width:${size}px;height:${size}px;
+      border-radius:50%;
+      border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+    "></div>`,
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [size/2, size/2],
+    popupAnchor: [0, -size/2],
+  });
+};
 
-// Fixed geographic center for each Brazilian state (hand-tuned so NE states don't overlap)
+const CATEGORIES = [
+  { acronym: 'MGT', color: '#ef4444', label: 'Management' },
+  { acronym: 'TEC', color: '#3b82f6', label: 'Technical' },
+  { acronym: 'ADM', color: '#f59e0b', label: 'Administration' },
+  { acronym: 'OPS', color: '#10b981', label: 'Operations' },
+  { acronym: 'MKT', color: '#8b5cf6', label: 'Marketing' },
+];
+
+const CATEGORY_MAP = {};
+CATEGORIES.forEach(c => { CATEGORY_MAP[c.acronym] = c; });
+
 const STATE_CENTERS = {
   "Acre": [-8.77, -70.55],
   "Alagoas": [-9.57, -36.78],
@@ -43,50 +60,61 @@ const STATE_CENTERS = {
   "Tocantins": [-10.18, -48.33],
 };
 
-// Custom Cluster Icon creator
-const createClusterIcon = (count, size) => {
-  const s = size || 44;
+const CATEGORY_OFFSETS = {
+  'MGT': [0, 0.5],
+  'TEC': [0.5, 0],
+  'ADM': [0, -0.5],
+  'OPS': [-0.5, 0],
+  'MKT': [0.35, 0.35],
+};
+
+const createCountBadge = (color, count) => {
+  const s = count > 99 ? 38 : count > 30 ? 32 : 26;
+  const fontSize = count > 99 ? 11 : 12;
   return L.divIcon({
-    html: `<span>${count}</span>`,
-    className: 'marker-cluster-custom',
-    iconSize: L.point(s, s, true),
+    html: `<div style="
+      background:${color};
+      width:${s}px;height:${s}px;
+      border-radius:50%;
+      border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-weight:700;font-size:${fontSize}px;
+    ">${count}</div>`,
+    className: '',
+    iconSize: [s, s],
+    iconAnchor: [s/2, s/2],
+    popupAnchor: [0, -s/2],
   });
 };
 
-// Larger state-level icon
-const createStateIcon = (count) => {
-  const s = count > 99 ? 54 : count > 30 ? 48 : 42;
-  return L.divIcon({
-    html: `<span>${count}</span>`,
-    className: 'state-marker',
-    iconSize: L.point(s, s, true),
-  });
-};
-
-function ZoomListener({ onZoomChange }) {
+function ZoomController({ onZoomChange }) {
   useMapEvents({
-    zoomend: (e) => {
-      onZoomChange(e.target.getZoom());
-    }
+    zoomend: (e) => onZoomChange(e.target.getZoom()),
   });
   return null;
 }
 
-function MapController({ selectedPerson }) {
+function ViewController({ selectedPerson, selectedGroup }) {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedPerson) {
-      map.flyTo(selectedPerson.coordinates, 16, {
-        duration: 1.5
-      });
+    if (selectedPerson && selectedPerson.coordinates) {
+      map.flyTo(selectedPerson.coordinates, 11, { duration: 1.5 });
+    } else if (selectedGroup) {
+      if (selectedGroup.type === 'state') {
+        const center = STATE_CENTERS[selectedGroup.state] || [-14.24, -51.93];
+        map.flyTo(center, 6, { duration: 1.5 });
+      } else if (selectedGroup.type === 'city') {
+        map.flyTo(selectedGroup.coordinates, 10, { duration: 1.5 });
+      }
     }
-  }, [selectedPerson, map]);
+  }, [selectedPerson, selectedGroup, map]);
 
   return null;
 }
 
-export default function MapComponent({ data, selectedPerson, onPersonSelect, isDarkMode }) {
+export default function MapComponent({ data, selectedPerson, selectedGroup, onPersonSelect, onGroupSelect, isDarkMode }) {
   const [geojsonData, setGeojsonData] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(4);
 
@@ -98,111 +126,150 @@ export default function MapComponent({ data, selectedPerson, onPersonSelect, isD
   }, []);
 
   const brazilBounds = [
-    [-33.75, -73.99],
-    [5.27, -34.79]
+    [-33.75, -74.0],
+    [5.27, -32.5],
   ];
 
-  // State-level clusters using FIXED center positions
+  const minZoomLevel = 4;
+  const maxZoomLevel = 12;
+
   const stateClusters = useMemo(() => {
     if (currentZoom > 5) return [];
-
     const groups = {};
     data.forEach(p => {
-      const st = p.address.state || "Brasil";
-      if (!groups[st]) {
-        groups[st] = 0;
+      const key = `${p.state}|${p.category.acronym}`;
+      if (!groups[key]) {
+        groups[key] = {
+          type: 'state',
+          state: p.state,
+          acronym: p.category.acronym,
+          count: 0,
+          coordinates: STATE_CENTERS[p.state] || [-14.24, -51.93],
+        };
       }
-      groups[st] += 1;
+      groups[key].count++;
     });
+    return Object.values(groups);
+  }, [data, currentZoom]);
 
-    return Object.keys(groups).map(st => ({
-      state: st,
-      count: groups[st],
-      coordinates: STATE_CENTERS[st] || [-14.24, -51.93] // fallback to center of Brazil
+  const cityClusters = useMemo(() => {
+    if (currentZoom < 6 || currentZoom > 9) return [];
+    const groups = {};
+    data.forEach(p => {
+      if (!p.coordinates) return;
+      const key = `${p.city}|${p.state}|${p.category.acronym}`;
+      if (!groups[key]) {
+        groups[key] = {
+          type: 'city',
+          city: p.city,
+          state: p.state,
+          acronym: p.category.acronym,
+          count: 0,
+          coordinates: [0, 0],
+          latSum: 0,
+          lngSum: 0,
+        };
+      }
+      groups[key].count++;
+      groups[key].latSum += p.coordinates[0];
+      groups[key].lngSum += p.coordinates[1];
+    });
+    return Object.values(groups).map(g => ({
+      ...g,
+      coordinates: [g.latSum / g.count, g.lngSum / g.count],
     }));
   }, [data, currentZoom]);
 
-  // Border style for state boundaries
+  const personMarkers = useMemo(() => {
+    if (currentZoom < 10) return [];
+    return data.filter(p => p.coordinates);
+  }, [data, currentZoom]);
+
   const borderStyle = {
     color: isDarkMode ? 'rgba(0, 200, 75, 0.5)' : 'rgba(0, 169, 80, 0.4)',
     weight: 1.5,
     fillOpacity: 0,
-    dashArray: ''
+    dashArray: '',
   };
 
   return (
     <div className="map-wrapper">
-      <MapContainer 
-        center={[-14.235, -51.925]} 
-        zoom={4} 
+      <MapContainer
+        center={[-14.235, -51.925]}
+        zoom={minZoomLevel}
         style={{ height: '100%', width: '100%' }}
         maxBounds={brazilBounds}
         maxBoundsViscosity={1.0}
-        minZoom={4}
+        minZoom={minZoomLevel}
+        maxZoom={maxZoomLevel}
       >
         <TileLayer
           attribution='&copy; OpenStreetMap'
-          url={isDarkMode 
+          url={isDarkMode
             ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
             : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"}
         />
-
-        <ZoomListener onZoomChange={setCurrentZoom} />
-        <MapController selectedPerson={selectedPerson} />
-
-        {/* State Borders */}
+        <ZoomController onZoomChange={setCurrentZoom} />
+        <ViewController selectedPerson={selectedPerson} selectedGroup={selectedGroup} />
         {geojsonData && (
-          <GeoJSON 
-            data={geojsonData} 
+          <GeoJSON
+            data={geojsonData}
             style={borderStyle}
             interactive={false}
           />
         )}
 
-        {/* LOW ZOOM: Fixed state-center markers */}
-        {currentZoom <= 5 ? (
-          stateClusters.map(sc => (
-            <Marker 
-              key={sc.state} 
-              position={sc.coordinates}
-              icon={createStateIcon(sc.count)}
-              interactive={false}
-            />
-          ))
-        ) : (
-          /* HIGH ZOOM: Normal clustering */
-          <MarkerClusterGroup
-            chunkedLoading
-            iconCreateFunction={(cluster) => createClusterIcon(cluster.getChildCount())}
-            maxClusterRadius={60}
-            showCoverageOnHover={false}
-            spiderfyOnMaxZoom={true}
-            zoomToBoundsOnClick={true}
-          >
-            {data.map((person) => (
-              <Marker 
-                key={person.id} 
-                position={person.coordinates}
-                eventHandlers={{
-                  click: () => onPersonSelect(person),
-                }}
-              >
-                <Popup>
-                  <div className="popup-content">
-                    <h3>{person.fullName}</h3>
-                    <p>
-                      <svg style={{width:'14px', height:'14px', verticalAlign:'middle', marginRight:'4px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {person.address.full}
-                    </p>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MarkerClusterGroup>
-        )}
+        {currentZoom <= 5 && stateClusters.map((sc) => {
+          const color = CATEGORY_MAP[sc.acronym]?.color || '#666';
+          const offset = CATEGORY_OFFSETS[sc.acronym] || [0, 0];
+          const position = [sc.coordinates[0] + offset[1], sc.coordinates[1] + offset[0]];
+          return (
+            <Marker
+              key={`state-${sc.state}-${sc.acronym}`}
+              position={position}
+              icon={createCountBadge(color, sc.count)}
+              eventHandlers={{ click: () => onGroupSelect({ type: 'state', state: sc.state, acronym: sc.acronym, count: sc.count, coordinates: sc.coordinates }) }}
+            >
+              <Tooltip permanent={false} direction="top" offset={[0, -16]} opacity={0.9}>
+                <strong>{sc.state}</strong> — {sc.acronym}<br/>{sc.count} pessoas
+              </Tooltip>
+            </Marker>
+          );
+        })}
+
+        {currentZoom >= 6 && currentZoom <= 9 && cityClusters.map((cc) => {
+          const color = CATEGORY_MAP[cc.acronym]?.color || '#666';
+          const offset = CATEGORY_OFFSETS[cc.acronym] || [0, 0];
+          const position = [cc.coordinates[0] + offset[1], cc.coordinates[1] + offset[0]];
+          return (
+            <Marker
+              key={`city-${cc.city}-${cc.state}-${cc.acronym}`}
+              position={position}
+              icon={createCountBadge(color, cc.count)}
+              eventHandlers={{ click: () => onGroupSelect({ type: 'city', city: cc.city, state: cc.state, acronym: cc.acronym, count: cc.count, coordinates: cc.coordinates }) }}
+            >
+              <Tooltip permanent={false} direction="top" offset={[0, -16]} opacity={0.9}>
+                <strong>{cc.city}</strong> — {cc.acronym}<br/>{cc.count} pessoas
+              </Tooltip>
+            </Marker>
+          );
+        })}
+
+        {currentZoom >= 10 && personMarkers.map((person) => {
+          const color = person.category?.color || '#666';
+          return (
+            <Marker
+              key={person.id}
+              position={person.coordinates}
+              icon={createPersonIcon(color, 12)}
+              eventHandlers={{ click: () => onPersonSelect(person) }}
+            >
+              <Tooltip permanent={false} direction="top" offset={[0, -10]} opacity={0.9}>
+                <strong>{person.name}</strong><br/>{person.category?.acronym}<br/>{person.city}
+              </Tooltip>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );

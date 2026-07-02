@@ -1,0 +1,3222 @@
+[
+  {
+    "city": "Laranjal do Jari",
+    "state": "Amapá",
+    "lat": -0.7100463,
+    "lng": -52.4952908,
+    "count": 2
+  },
+  {
+    "city": "Canutama",
+    "state": "Amazonas",
+    "lat": -6.41245,
+    "lng": -64.4448611,
+    "count": 1
+  },
+  {
+    "city": "Iúna",
+    "state": "Espírito Santo",
+    "lat": -20.2156345,
+    "lng": -41.7568552,
+    "count": 1
+  },
+  {
+    "city": "Niterói",
+    "state": "Rio de Janeiro",
+    "lat": -22.909090062500002,
+    "lng": -43.0885433125,
+    "count": 8
+  },
+  {
+    "city": "Rio de Janeiro",
+    "state": "Rio de Janeiro",
+    "lat": -22.911841580952384,
+    "lng": -43.25473361190476,
+    "count": 42
+  },
+  {
+    "city": "São Paulo",
+    "state": "São Paulo",
+    "lat": -23.569816185245895,
+    "lng": -46.65354846065573,
+    "count": 61
+  },
+  {
+    "city": "Salvador",
+    "state": "Bahia",
+    "lat": -12.933503316666666,
+    "lng": -38.44219962777777,
+    "count": 18
+  },
+  {
+    "city": "São José dos Campos",
+    "state": "São Paulo",
+    "lat": -23.17681275,
+    "lng": -45.849314,
+    "count": 2
+  },
+  {
+    "city": "Angra dos Reis",
+    "state": "Rio de Janeiro",
+    "lat": -22.970966166666667,
+    "lng": -44.27732033333333,
+    "count": 3
+  },
+  {
+    "city": "Mairi",
+    "state": "Bahia",
+    "lat": -11.6927512,
+    "lng": -40.172968,
+    "count": 1
+  },
+  {
+    "city": "Sorocaba",
+    "state": "São Paulo",
+    "lat": -23.49975028571429,
+    "lng": -47.432472714285716,
+    "count": 7
+  },
+  {
+    "city": "Divinópolis",
+    "state": "Minas Gerais",
+    "lat": -20.1604044,
+    "lng": -44.868280500000004,
+    "count": 3
+  },
+  {
+    "city": "Marília",
+    "state": "São Paulo",
+    "lat": -22.2173679,
+    "lng": -49.9412593,
+    "count": 1
+  },
+  {
+    "city": "Catanduva",
+    "state": "São Paulo",
+    "lat": -21.12065875,
+    "lng": -48.996083999999996,
+    "count": 2
+  },
+  {
+    "city": "Diamantina",
+    "state": "Minas Gerais",
+    "lat": -18.21888405,
+    "lng": -43.588913950000006,
+    "count": 2
+  },
+  {
+    "city": "Anápolis",
+    "state": "Goiás",
+    "lat": -16.376978,
+    "lng": -48.982485,
+    "count": 2
+  },
+  {
+    "city": "Jaíba",
+    "state": "Minas Gerais",
+    "lat": -15.0900064,
+    "lng": -44.0179954,
+    "count": 1
+  },
+  {
+    "city": "Erechim",
+    "state": "Rio Grande do Sul",
+    "lat": -27.64543576666667,
+    "lng": -52.276484466666666,
+    "count": 3
+  },
+  {
+    "city": "Rio Branco",
+    "state": "Acre",
+    "lat": -9.9889531,
+    "lng": -67.77778062499999,
+    "count": 4
+  },
+  {
+    "city": "Candeias",
+    "state": "Minas Gerais",
+    "lat": -20.76999365,
+    "lng": -45.274716049999995,
+    "count": 2
+  },
+  {
+    "city": "Santo Antônio de Jesus",
+    "state": "Bahia",
+    "lat": -12.9692709,
+    "lng": -39.25161785,
+    "count": 2
+  },
+  {
+    "city": "Livramento de Nossa Senhora",
+    "state": "Bahia",
+    "lat": -13.645281075,
+    "lng": -41.849147975,
+    "count": 4
+  },
+  {
+    "city": "Caculé",
+    "state": "Bahia",
+    "lat": -14.4815418,
+    "lng": -42.2038162,
+    "count": 3
+  },
+  {
+    "city": "Santa Branca",
+    "state": "São Paulo",
+    "lat": -23.398966,
+    "lng": -45.8851906,
+    "count": 1
+  },
+  {
+    "city": "Pariquera-Açu",
+    "state": "São Paulo",
+    "lat": -24.7154486,
+    "lng": -47.8704434,
+    "count": 1
+  },
+  {
+    "city": "Santa Cruz da Esperança",
+    "state": "São Paulo",
+    "lat": -21.2895486,
+    "lng": -47.4314015,
+    "count": 1
+  },
+  {
+    "city": "Juazeiro do Norte",
+    "state": "Ceará",
+    "lat": -7.21959018,
+    "lng": -39.33088026,
+    "count": 5
+  },
+  {
+    "city": "Barra",
+    "state": "Bahia",
+    "lat": -11.0877931,
+    "lng": -43.1433957,
+    "count": 1
+  },
+  {
+    "city": "Santarém",
+    "state": "Pará",
+    "lat": -2.5256382333333334,
+    "lng": -55.0192285,
+    "count": 6
+  },
+  {
+    "city": "Mucuri",
+    "state": "Bahia",
+    "lat": -18.023783487499998,
+    "lng": -39.819928,
+    "count": 16
+  },
+  {
+    "city": "Mucugê",
+    "state": "Bahia",
+    "lat": -13.141997799999999,
+    "lng": -41.550366833333335,
+    "count": 3
+  },
+  {
+    "city": "Inhapim",
+    "state": "Minas Gerais",
+    "lat": -19.5486641,
+    "lng": -42.1223268,
+    "count": 2
+  },
+  {
+    "city": "Ipirá",
+    "state": "Bahia",
+    "lat": -11.9373349,
+    "lng": -39.6979623,
+    "count": 1
+  },
+  {
+    "city": "Cordeiros",
+    "state": "Bahia",
+    "lat": -15.0815824,
+    "lng": -41.9662377,
+    "count": 1
+  },
+  {
+    "city": "Érico Cardoso",
+    "state": "Bahia",
+    "lat": -13.4733277,
+    "lng": -42.1051951,
+    "count": 1
+  },
+  {
+    "city": "Lavras do Sul",
+    "state": "Rio Grande do Sul",
+    "lat": -30.8531911,
+    "lng": -53.785066,
+    "count": 1
+  },
+  {
+    "city": "Viadutos",
+    "state": "Rio Grande do Sul",
+    "lat": -27.56852813333333,
+    "lng": -52.01794613333334,
+    "count": 3
+  },
+  {
+    "city": "Itatiba do Sul",
+    "state": "Rio Grande do Sul",
+    "lat": -27.38238905,
+    "lng": -52.4581637,
+    "count": 2
+  },
+  {
+    "city": "Vale Verde",
+    "state": "Rio Grande do Sul",
+    "lat": -29.7852523,
+    "lng": -52.1822858,
+    "count": 1
+  },
+  {
+    "city": "Campo Maior",
+    "state": "Piauí",
+    "lat": -4.833402925,
+    "lng": -42.174239799999995,
+    "count": 4
+  },
+  {
+    "city": "Vereda",
+    "state": "Bahia",
+    "lat": -16.9747336,
+    "lng": -40.2380591,
+    "count": 1
+  },
+  {
+    "city": "Bragança",
+    "state": "Pará",
+    "lat": -1.0402692999999998,
+    "lng": -46.76982015,
+    "count": 2
+  },
+  {
+    "city": "Cururupu",
+    "state": "Maranhão",
+    "lat": -1.8401801,
+    "lng": -44.8714479,
+    "count": 1
+  },
+  {
+    "city": "Abadia de Goiás",
+    "state": "Goiás",
+    "lat": -16.76290413,
+    "lng": -49.436023965,
+    "count": 20
+  },
+  {
+    "city": "Antonina",
+    "state": "Paraná",
+    "lat": -25.2559936,
+    "lng": -48.7373944,
+    "count": 1
+  },
+  {
+    "city": "Tefé",
+    "state": "Amazonas",
+    "lat": -3.3570961,
+    "lng": -64.7103308,
+    "count": 1
+  },
+  {
+    "city": "Serra",
+    "state": "Espírito Santo",
+    "lat": -20.1424962,
+    "lng": -40.27174867,
+    "count": 10
+  },
+  {
+    "city": "Contagem",
+    "state": "Minas Gerais",
+    "lat": -19.94815955,
+    "lng": -44.0473581,
+    "count": 2
+  },
+  {
+    "city": "Ilicínea",
+    "state": "Minas Gerais",
+    "lat": -20.9377299,
+    "lng": -45.8280175,
+    "count": 1
+  },
+  {
+    "city": "Riolândia",
+    "state": "São Paulo",
+    "lat": -19.98109715,
+    "lng": -49.6820284,
+    "count": 2
+  },
+  {
+    "city": "Ananindeua",
+    "state": "Pará",
+    "lat": -1.3829821,
+    "lng": -48.4089329,
+    "count": 1
+  },
+  {
+    "city": "Orós",
+    "state": "Ceará",
+    "lat": -6.2433316,
+    "lng": -38.9144136,
+    "count": 1
+  },
+  {
+    "city": "Mauriti",
+    "state": "Ceará",
+    "lat": -7.3893739,
+    "lng": -38.7756783,
+    "count": 1
+  },
+  {
+    "city": "Senador Sá",
+    "state": "Ceará",
+    "lat": -3.3507848,
+    "lng": -40.4648641,
+    "count": 1
+  },
+  {
+    "city": "Oeiras",
+    "state": "Piauí",
+    "lat": -7.0040064,
+    "lng": -42.1170792,
+    "count": 1
+  },
+  {
+    "city": "Sapezal",
+    "state": "Mato Grosso",
+    "lat": -13.5490937,
+    "lng": -58.8223714,
+    "count": 1
+  },
+  {
+    "city": "Belterra",
+    "state": "Pará",
+    "lat": -2.6411962,
+    "lng": -54.9238106,
+    "count": 1
+  },
+  {
+    "city": "Heliópolis",
+    "state": "Bahia",
+    "lat": -10.6492875,
+    "lng": -38.3309043,
+    "count": 1
+  },
+  {
+    "city": "Curitiba",
+    "state": "Paraná",
+    "lat": -25.444801731250006,
+    "lng": -49.271139906250006,
+    "count": 16
+  },
+  {
+    "city": "São Vicente",
+    "state": "São Paulo",
+    "lat": -23.9552274,
+    "lng": -46.39125225,
+    "count": 2
+  },
+  {
+    "city": "Araras",
+    "state": "São Paulo",
+    "lat": -22.3738742,
+    "lng": -47.3691663,
+    "count": 1
+  },
+  {
+    "city": "Joinville",
+    "state": "Santa Catarina",
+    "lat": -26.347310224999998,
+    "lng": -48.8356122,
+    "count": 4
+  },
+  {
+    "city": "Campos dos Goytacazes",
+    "state": "Rio de Janeiro",
+    "lat": -21.776240100000003,
+    "lng": -41.3239545,
+    "count": 2
+  },
+  {
+    "city": "Chapecó",
+    "state": "Santa Catarina",
+    "lat": -27.1083175,
+    "lng": -52.5973288,
+    "count": 1
+  },
+  {
+    "city": "Pato Branco",
+    "state": "Paraná",
+    "lat": -26.2267015,
+    "lng": -52.67916966666667,
+    "count": 3
+  },
+  {
+    "city": "Cornélio Procópio",
+    "state": "Paraná",
+    "lat": -23.1798512,
+    "lng": -50.6408108,
+    "count": 2
+  },
+  {
+    "city": "Guarani d'Oeste",
+    "state": "São Paulo",
+    "lat": -20.0749484,
+    "lng": -50.3403425,
+    "count": 1
+  },
+  {
+    "city": "Matinhos",
+    "state": "Paraná",
+    "lat": -25.8363213,
+    "lng": -48.5482226,
+    "count": 2
+  },
+  {
+    "city": "Colombo",
+    "state": "Paraná",
+    "lat": -25.351896349999997,
+    "lng": -49.2009995,
+    "count": 2
+  },
+  {
+    "city": "Rio do Sul",
+    "state": "Santa Catarina",
+    "lat": -27.2140342,
+    "lng": -49.6392319,
+    "count": 1
+  },
+  {
+    "city": "Vitória de Santo Antão",
+    "state": "Pernambuco",
+    "lat": -8.1202399,
+    "lng": -35.2954549,
+    "count": 1
+  },
+  {
+    "city": "Cruzeiro do Sul",
+    "state": "Bahia",
+    "lat": -16.9753487,
+    "lng": -40.2402027,
+    "count": 1
+  },
+  {
+    "city": "Mandirituba",
+    "state": "Paraná",
+    "lat": -25.86843905,
+    "lng": -49.3678658,
+    "count": 2
+  },
+  {
+    "city": "Novo Gama",
+    "state": "Goiás",
+    "lat": -16.0953445,
+    "lng": -48.0325353,
+    "count": 2
+  },
+  {
+    "city": "Parauapebas",
+    "state": "Pará",
+    "lat": -6.0734187,
+    "lng": -49.8594858,
+    "count": 1
+  },
+  {
+    "city": "Assis Chateaubriand",
+    "state": "Paraná",
+    "lat": -24.4057804,
+    "lng": -53.5143843,
+    "count": 1
+  },
+  {
+    "city": "Picos",
+    "state": "Piauí",
+    "lat": -7.0877625,
+    "lng": -41.4059162,
+    "count": 1
+  },
+  {
+    "city": "Floresta",
+    "state": "Pernambuco",
+    "lat": -8.5988146375,
+    "lng": -38.57359525,
+    "count": 8
+  },
+  {
+    "city": "Tabuleiro do Norte",
+    "state": "Ceará",
+    "lat": -5.280715300000001,
+    "lng": -38.102890825,
+    "count": 4
+  },
+  {
+    "city": "Uruoca",
+    "state": "Ceará",
+    "lat": -3.3159456,
+    "lng": -40.5584429,
+    "count": 1
+  },
+  {
+    "city": "Arraial do Cabo",
+    "state": "Rio de Janeiro",
+    "lat": -22.9407908,
+    "lng": -42.1782161,
+    "count": 1
+  },
+  {
+    "city": "Samambaia",
+    "state": "Distrito Federal",
+    "lat": -15.8718372,
+    "lng": -48.099312,
+    "count": 2
+  },
+  {
+    "city": "Panorama",
+    "state": "São Paulo",
+    "lat": -21.3630597,
+    "lng": -51.858158,
+    "count": 1
+  },
+  {
+    "city": "Papanduva",
+    "state": "Santa Catarina",
+    "lat": -26.4135876,
+    "lng": -50.1376748,
+    "count": 1
+  },
+  {
+    "city": "Campinas",
+    "state": "São Paulo",
+    "lat": -22.878401216666663,
+    "lng": -47.02817251666667,
+    "count": 6
+  },
+  {
+    "city": "Belém",
+    "state": "Pará",
+    "lat": -1.4214486363636363,
+    "lng": -48.45993664545454,
+    "count": 11
+  },
+  {
+    "city": "Franca",
+    "state": "São Paulo",
+    "lat": -20.532804988888884,
+    "lng": -47.39415145555555,
+    "count": 9
+  },
+  {
+    "city": "Monte Belo",
+    "state": "Minas Gerais",
+    "lat": -21.3295144,
+    "lng": -46.3685335,
+    "count": 1
+  },
+  {
+    "city": "Estrela do Sul",
+    "state": "Minas Gerais",
+    "lat": -18.7233609,
+    "lng": -47.6992821,
+    "count": 1
+  },
+  {
+    "city": "Porangatu",
+    "state": "Goiás",
+    "lat": -13.4420725,
+    "lng": -49.14358166666667,
+    "count": 3
+  },
+  {
+    "city": "Pirenópolis",
+    "state": "Goiás",
+    "lat": -15.8493274,
+    "lng": -48.9568084,
+    "count": 1
+  },
+  {
+    "city": "Marques de Souza",
+    "state": "Rio Grande do Sul",
+    "lat": -29.3270044,
+    "lng": -52.0925641,
+    "count": 1
+  },
+  {
+    "city": "Ouro Preto do Oeste",
+    "state": "Rondônia",
+    "lat": -10.7282828,
+    "lng": -62.25279923333333,
+    "count": 3
+  },
+  {
+    "city": "Lagoa do Barro do Piauí",
+    "state": "Piauí",
+    "lat": -8.479135,
+    "lng": -41.53014565,
+    "count": 2
+  },
+  {
+    "city": "Alhandra",
+    "state": "Paraíba",
+    "lat": -7.4294856,
+    "lng": -34.9114107,
+    "count": 1
+  },
+  {
+    "city": "Boquim",
+    "state": "Sergipe",
+    "lat": -11.1419321,
+    "lng": -37.6197774,
+    "count": 1
+  },
+  {
+    "city": "Xapuri",
+    "state": "Acre",
+    "lat": -10.6501827,
+    "lng": -68.5064402,
+    "count": 1
+  },
+  {
+    "city": "Colméia",
+    "state": "Tocantins",
+    "lat": -8.7339152,
+    "lng": -48.7515327,
+    "count": 1
+  },
+  {
+    "city": "Caiçara do Norte",
+    "state": "Rio Grande do Norte",
+    "lat": -5.0632294,
+    "lng": -36.0465034,
+    "count": 1
+  },
+  {
+    "city": "Itacaré",
+    "state": "Bahia",
+    "lat": -14.3468038,
+    "lng": -39.2281652,
+    "count": 1
+  },
+  {
+    "city": "Normandia",
+    "state": "Roraima",
+    "lat": 4.0860417,
+    "lng": -60.4425917,
+    "count": 1
+  },
+  {
+    "city": "Belo Horizonte",
+    "state": "Minas Gerais",
+    "lat": -19.896645,
+    "lng": -43.9441565,
+    "count": 6
+  },
+  {
+    "city": "Três de Maio",
+    "state": "Rio Grande do Sul",
+    "lat": -27.7610314,
+    "lng": -54.2409826,
+    "count": 1
+  },
+  {
+    "city": "Paraty",
+    "state": "Rio de Janeiro",
+    "lat": -23.2188651,
+    "lng": -44.7145694,
+    "count": 1
+  },
+  {
+    "city": "São José dos Pinhais",
+    "state": "Paraná",
+    "lat": -25.524330666666668,
+    "lng": -49.18128106666666,
+    "count": 3
+  },
+  {
+    "city": "Senador Canedo",
+    "state": "Goiás",
+    "lat": -16.6956883,
+    "lng": -49.1024629,
+    "count": 1
+  },
+  {
+    "city": "Itabirito",
+    "state": "Minas Gerais",
+    "lat": -20.2544864,
+    "lng": -43.8084472,
+    "count": 2
+  },
+  {
+    "city": "Itaúna",
+    "state": "Minas Gerais",
+    "lat": -20.1191852,
+    "lng": -44.603167033333335,
+    "count": 3
+  },
+  {
+    "city": "São Luís de Montes Belos",
+    "state": "Goiás",
+    "lat": -16.5218172,
+    "lng": -50.3762208,
+    "count": 1
+  },
+  {
+    "city": "Guarulhos",
+    "state": "São Paulo",
+    "lat": -23.44355475,
+    "lng": -46.556116825000004,
+    "count": 4
+  },
+  {
+    "city": "SCIA",
+    "state": "Distrito Federal",
+    "lat": -15.7758735,
+    "lng": -47.9870717,
+    "count": 1
+  },
+  {
+    "city": "Porto Alegre",
+    "state": "Rio Grande do Sul",
+    "lat": -30.046053160000003,
+    "lng": -51.201152119999996,
+    "count": 10
+  },
+  {
+    "city": "Manaus",
+    "state": "Amazonas",
+    "lat": -3.0746771,
+    "lng": -59.99614988,
+    "count": 5
+  },
+  {
+    "city": "Santos",
+    "state": "São Paulo",
+    "lat": -23.964020966666666,
+    "lng": -46.33533416666666,
+    "count": 3
+  },
+  {
+    "city": "Ribeirão Preto",
+    "state": "São Paulo",
+    "lat": -21.1414477,
+    "lng": -47.8085768,
+    "count": 1
+  },
+  {
+    "city": "Uberlândia",
+    "state": "Minas Gerais",
+    "lat": -18.907300975,
+    "lng": -48.2413067,
+    "count": 4
+  },
+  {
+    "city": "Teófilo Otoni",
+    "state": "Minas Gerais",
+    "lat": -17.851962033333333,
+    "lng": -41.511740366666665,
+    "count": 3
+  },
+  {
+    "city": "Ilhéus",
+    "state": "Bahia",
+    "lat": -14.817628175,
+    "lng": -39.063501450000004,
+    "count": 4
+  },
+  {
+    "city": "Ouro Fino",
+    "state": "Minas Gerais",
+    "lat": -22.2411726,
+    "lng": -46.41088385,
+    "count": 2
+  },
+  {
+    "city": "Cubatão",
+    "state": "São Paulo",
+    "lat": -23.8804772,
+    "lng": -46.4548299,
+    "count": 2
+  },
+  {
+    "city": "Pinhões",
+    "state": "Bahia",
+    "lat": -9.579526,
+    "lng": -39.8914416,
+    "count": 3
+  },
+  {
+    "city": "Alagoinhas",
+    "state": "Bahia",
+    "lat": -12.1309072,
+    "lng": -38.4193719,
+    "count": 1
+  },
+  {
+    "city": "Santa Cruz do Sul",
+    "state": "Rio Grande do Sul",
+    "lat": -29.7027113,
+    "lng": -52.4285047,
+    "count": 2
+  },
+  {
+    "city": "Aracatu",
+    "state": "Bahia",
+    "lat": -14.1243581,
+    "lng": -41.4844579,
+    "count": 1
+  },
+  {
+    "city": "Santa Maria da Vitória",
+    "state": "Bahia",
+    "lat": -13.386112033333333,
+    "lng": -44.196142933333334,
+    "count": 3
+  },
+  {
+    "city": "Itaí",
+    "state": "São Paulo",
+    "lat": -23.4491167,
+    "lng": -49.1039576,
+    "count": 1
+  },
+  {
+    "city": "Poções",
+    "state": "Bahia",
+    "lat": -14.5632222,
+    "lng": -40.3083071,
+    "count": 2
+  },
+  {
+    "city": "Igaraçu do Tietê",
+    "state": "São Paulo",
+    "lat": -22.5176015,
+    "lng": -48.5614122,
+    "count": 1
+  },
+  {
+    "city": "Riversul",
+    "state": "São Paulo",
+    "lat": -23.8580453,
+    "lng": -49.4998102,
+    "count": 1
+  },
+  {
+    "city": "Capão Bonito",
+    "state": "São Paulo",
+    "lat": -24.0154738,
+    "lng": -48.5505539,
+    "count": 1
+  },
+  {
+    "city": "Catalão",
+    "state": "Goiás",
+    "lat": -18.2144513,
+    "lng": -47.9519776,
+    "count": 1
+  },
+  {
+    "city": "Ibiraba",
+    "state": "Bahia",
+    "lat": -10.7907198,
+    "lng": -42.8232696,
+    "count": 1
+  },
+  {
+    "city": "Imperatriz",
+    "state": "Maranhão",
+    "lat": -5.5145768,
+    "lng": -47.4742043,
+    "count": 2
+  },
+  {
+    "city": "Maragogipe",
+    "state": "Bahia",
+    "lat": -12.8851753,
+    "lng": -38.9403522,
+    "count": 2
+  },
+  {
+    "city": "Curaçá",
+    "state": "Bahia",
+    "lat": -9.6124111,
+    "lng": -39.7939364,
+    "count": 1
+  },
+  {
+    "city": "Morro do Chapéu",
+    "state": "Bahia",
+    "lat": -10.927061,
+    "lng": -41.2736038,
+    "count": 1
+  },
+  {
+    "city": "Guapó",
+    "state": "Goiás",
+    "lat": -16.9126044,
+    "lng": -49.6548935,
+    "count": 1
+  },
+  {
+    "city": "Manacapuru",
+    "state": "Amazonas",
+    "lat": -3.0981726,
+    "lng": -61.1388916,
+    "count": 1
+  },
+  {
+    "city": "Vera Cruz",
+    "state": "Bahia",
+    "lat": -13.0060784,
+    "lng": -38.7692638,
+    "count": 1
+  },
+  {
+    "city": "Brasília",
+    "state": "Distrito Federal",
+    "lat": -15.792119760000002,
+    "lng": -47.90160057,
+    "count": 10
+  },
+  {
+    "city": "Natal",
+    "state": "Rio Grande do Norte",
+    "lat": -5.83076978,
+    "lng": -35.199972859999995,
+    "count": 5
+  },
+  {
+    "city": "São Bernardo do Campo",
+    "state": "São Paulo",
+    "lat": -23.7078112,
+    "lng": -46.5254412,
+    "count": 1
+  },
+  {
+    "city": "Ipatinga",
+    "state": "Minas Gerais",
+    "lat": -19.4873348,
+    "lng": -42.5443419,
+    "count": 1
+  },
+  {
+    "city": "Volta Redonda",
+    "state": "Rio de Janeiro",
+    "lat": -22.4740825,
+    "lng": -44.0593322,
+    "count": 1
+  },
+  {
+    "city": "Formosa do Rio Preto",
+    "state": "Bahia",
+    "lat": -11.364102699999998,
+    "lng": -46.54996756666666,
+    "count": 3
+  },
+  {
+    "city": "Portão",
+    "state": "Rio Grande do Sul",
+    "lat": -29.683168259999995,
+    "lng": -51.241910180000005,
+    "count": 5
+  },
+  {
+    "city": "Maracanaú",
+    "state": "Ceará",
+    "lat": -3.875884,
+    "lng": -38.6227286,
+    "count": 1
+  },
+  {
+    "city": "Maracanã",
+    "state": "Pará",
+    "lat": -0.6254245,
+    "lng": -47.5407348,
+    "count": 2
+  },
+  {
+    "city": "Boa Esperança",
+    "state": "Minas Gerais",
+    "lat": -21.056272,
+    "lng": -45.5682628,
+    "count": 1
+  },
+  {
+    "city": "Rio Verde",
+    "state": "Goiás",
+    "lat": -17.7604831,
+    "lng": -50.9279574,
+    "count": 1
+  },
+  {
+    "city": "Belém",
+    "state": "Alagoas",
+    "lat": -9.5889441,
+    "lng": -36.4602925,
+    "count": 2
+  },
+  {
+    "city": "Fortaleza",
+    "state": "Ceará",
+    "lat": -3.7730487538461537,
+    "lng": -38.54241280769231,
+    "count": 13
+  },
+  {
+    "city": "São Sebastião da Bela Vista",
+    "state": "Minas Gerais",
+    "lat": -22.1212416,
+    "lng": -45.7724115,
+    "count": 2
+  },
+  {
+    "city": "Presidente Prudente",
+    "state": "São Paulo",
+    "lat": -22.1150737,
+    "lng": -51.4485686,
+    "count": 1
+  },
+  {
+    "city": "Córrego do Ouro",
+    "state": "Rio de Janeiro",
+    "lat": -22.378891380000002,
+    "lng": -41.969378920000004,
+    "count": 5
+  },
+  {
+    "city": "Cabreúva",
+    "state": "São Paulo",
+    "lat": -23.2709337,
+    "lng": -47.06186856666667,
+    "count": 3
+  },
+  {
+    "city": "Domingos Martins",
+    "state": "Espírito Santo",
+    "lat": -20.380759,
+    "lng": -41.0349545,
+    "count": 2
+  },
+  {
+    "city": "Itajá",
+    "state": "Rio Grande do Norte",
+    "lat": -5.6671118,
+    "lng": -36.8737837,
+    "count": 1
+  },
+  {
+    "city": "Neves",
+    "state": "Rio de Janeiro",
+    "lat": -22.825802,
+    "lng": -43.0915531,
+    "count": 1
+  },
+  {
+    "city": "Umirim",
+    "state": "Ceará",
+    "lat": -3.6796629,
+    "lng": -39.355441,
+    "count": 1
+  },
+  {
+    "city": "Poção",
+    "state": "Pernambuco",
+    "lat": -8.190317,
+    "lng": -36.7016953,
+    "count": 1
+  },
+  {
+    "city": "São Félix do Xingu",
+    "state": "Pará",
+    "lat": -7.0332044,
+    "lng": -52.322599499999995,
+    "count": 2
+  },
+  {
+    "city": "São Carlos",
+    "state": "São Paulo",
+    "lat": -22.060656266666665,
+    "lng": -47.85723456666667,
+    "count": 3
+  },
+  {
+    "city": "Recife",
+    "state": "Pernambuco",
+    "lat": -8.058807756250001,
+    "lng": -34.90901861875,
+    "count": 16
+  },
+  {
+    "city": "Cuiabá",
+    "state": "Mato Grosso",
+    "lat": -15.8233728,
+    "lng": -55.419659,
+    "count": 1
+  },
+  {
+    "city": "Teresina",
+    "state": "Piauí",
+    "lat": -5.0523014,
+    "lng": -42.81773001666667,
+    "count": 6
+  },
+  {
+    "city": "Barra Bonita",
+    "state": "São Paulo",
+    "lat": -22.477364549999997,
+    "lng": -48.56773725,
+    "count": 2
+  },
+  {
+    "city": "Ibicoara",
+    "state": "Bahia",
+    "lat": -13.4117002,
+    "lng": -41.283192,
+    "count": 1
+  },
+  {
+    "city": "Cristalina",
+    "state": "Goiás",
+    "lat": -16.7437602,
+    "lng": -47.612676,
+    "count": 1
+  },
+  {
+    "city": "Grajaú",
+    "state": "Maranhão",
+    "lat": -5.6215063,
+    "lng": -45.7701316,
+    "count": 1
+  },
+  {
+    "city": "Várzea Grande",
+    "state": "Mato Grosso",
+    "lat": -15.7044731,
+    "lng": -56.1491566,
+    "count": 2
+  },
+  {
+    "city": "Diamantino",
+    "state": "Mato Grosso",
+    "lat": -14.37817115,
+    "lng": -56.394415,
+    "count": 2
+  },
+  {
+    "city": "Poços de Caldas",
+    "state": "Minas Gerais",
+    "lat": -21.7839004,
+    "lng": -46.5858955,
+    "count": 2
+  },
+  {
+    "city": "Rosário Oeste",
+    "state": "Mato Grosso",
+    "lat": -14.84024965,
+    "lng": -56.44162695,
+    "count": 2
+  },
+  {
+    "city": "Jangada",
+    "state": "Mato Grosso",
+    "lat": -15.2258063,
+    "lng": -56.4983838,
+    "count": 1
+  },
+  {
+    "city": "Centralina",
+    "state": "Minas Gerais",
+    "lat": -18.5700032,
+    "lng": -49.1929042,
+    "count": 1
+  },
+  {
+    "city": "Lajedo",
+    "state": "Pernambuco",
+    "lat": -8.6338823,
+    "lng": -36.306356,
+    "count": 1
+  },
+  {
+    "city": "Rondon do Pará",
+    "state": "Pará",
+    "lat": -4.774097,
+    "lng": -48.0662168,
+    "count": 1
+  },
+  {
+    "city": "Wanderlândia",
+    "state": "Tocantins",
+    "lat": -6.8497967,
+    "lng": -47.9661604,
+    "count": 1
+  },
+  {
+    "city": "Buritis",
+    "state": "Rondônia",
+    "lat": -10.2198833,
+    "lng": -63.8137368,
+    "count": 1
+  },
+  {
+    "city": "Chupinguaia",
+    "state": "Rondônia",
+    "lat": -12.2965541,
+    "lng": -61.0477715,
+    "count": 1
+  },
+  {
+    "city": "Tibau do Sul",
+    "state": "Rio Grande do Norte",
+    "lat": -6.232652033333333,
+    "lng": -35.04564396666667,
+    "count": 3
+  },
+  {
+    "city": "Cariacica",
+    "state": "Espírito Santo",
+    "lat": -20.324556,
+    "lng": -40.372765,
+    "count": 2
+  },
+  {
+    "city": "Paranaguá",
+    "state": "Paraná",
+    "lat": -25.5159019,
+    "lng": -48.5082967,
+    "count": 2
+  },
+  {
+    "city": "Imbé",
+    "state": "Rio Grande do Sul",
+    "lat": -29.9812599,
+    "lng": -50.1318055,
+    "count": 1
+  },
+  {
+    "city": "Pomerode",
+    "state": "Santa Catarina",
+    "lat": -26.7370894,
+    "lng": -49.1782965,
+    "count": 1
+  },
+  {
+    "city": "Guabiruba",
+    "state": "Santa Catarina",
+    "lat": -27.0839862,
+    "lng": -48.972649,
+    "count": 1
+  },
+  {
+    "city": "Valença do Piauí",
+    "state": "Piauí",
+    "lat": -6.4062235,
+    "lng": -41.7359661,
+    "count": 2
+  },
+  {
+    "city": "Araranguá",
+    "state": "Santa Catarina",
+    "lat": -28.9700354,
+    "lng": -49.5276204,
+    "count": 1
+  },
+  {
+    "city": "Porto Velho",
+    "state": "Rondônia",
+    "lat": -8.7527588,
+    "lng": -63.8411129,
+    "count": 2
+  },
+  {
+    "city": "São Nicolau",
+    "state": "Rio Grande do Sul",
+    "lat": -28.1837836,
+    "lng": -55.2678059,
+    "count": 1
+  },
+  {
+    "city": "São José do Rio Preto",
+    "state": "São Paulo",
+    "lat": -20.8141357,
+    "lng": -49.3784156,
+    "count": 1
+  },
+  {
+    "city": "Guarapuava",
+    "state": "Paraná",
+    "lat": -25.391107233333333,
+    "lng": -51.46652713333333,
+    "count": 3
+  },
+  {
+    "city": "Morretes",
+    "state": "Paraná",
+    "lat": -25.46965206666667,
+    "lng": -48.871419933333335,
+    "count": 3
+  },
+  {
+    "city": "Santo Antônio de Pádua",
+    "state": "Rio de Janeiro",
+    "lat": -21.53503245,
+    "lng": -42.18788945,
+    "count": 2
+  },
+  {
+    "city": "Araguari",
+    "state": "Minas Gerais",
+    "lat": -18.6318527,
+    "lng": -48.20204495,
+    "count": 2
+  },
+  {
+    "city": "São Sebastião do Paraíso",
+    "state": "Minas Gerais",
+    "lat": -20.916121666666665,
+    "lng": -46.99010976666667,
+    "count": 3
+  },
+  {
+    "city": "Campo do Meio",
+    "state": "Minas Gerais",
+    "lat": -21.1072991,
+    "lng": -45.8295171,
+    "count": 1
+  },
+  {
+    "city": "Conceição dos Ouros",
+    "state": "Minas Gerais",
+    "lat": -22.415152399999997,
+    "lng": -45.80315605,
+    "count": 2
+  },
+  {
+    "city": "Vacaria",
+    "state": "Rio Grande do Sul",
+    "lat": -28.50302195,
+    "lng": -50.93693715,
+    "count": 4
+  },
+  {
+    "city": "Bofete",
+    "state": "São Paulo",
+    "lat": -23.1031246,
+    "lng": -48.2578515,
+    "count": 1
+  },
+  {
+    "city": "Cajuru",
+    "state": "São Paulo",
+    "lat": -21.2775244,
+    "lng": -47.304101,
+    "count": 1
+  },
+  {
+    "city": "Serra Preta",
+    "state": "Bahia",
+    "lat": -12.1608399,
+    "lng": -39.3304942,
+    "count": 1
+  },
+  {
+    "city": "Vila Velha",
+    "state": "Espírito Santo",
+    "lat": -20.3597284,
+    "lng": -40.2989737,
+    "count": 1
+  },
+  {
+    "city": "Leópolis",
+    "state": "Paraná",
+    "lat": -23.0809386,
+    "lng": -50.7532605,
+    "count": 1
+  },
+  {
+    "city": "Barbacena",
+    "state": "Minas Gerais",
+    "lat": -21.240657900000002,
+    "lng": -43.772872050000004,
+    "count": 2
+  },
+  {
+    "city": "Ribeirão das Neves",
+    "state": "Minas Gerais",
+    "lat": -19.813253933333332,
+    "lng": -44.05358623333333,
+    "count": 3
+  },
+  {
+    "city": "Três Corações",
+    "state": "Minas Gerais",
+    "lat": -21.6706526,
+    "lng": -45.2689694,
+    "count": 1
+  },
+  {
+    "city": "Patrocínio",
+    "state": "Minas Gerais",
+    "lat": -18.9461722,
+    "lng": -46.984594200000004,
+    "count": 2
+  },
+  {
+    "city": "São Lourenço",
+    "state": "Minas Gerais",
+    "lat": -22.1132407,
+    "lng": -45.051371450000005,
+    "count": 2
+  },
+  {
+    "city": "Lambari",
+    "state": "Minas Gerais",
+    "lat": -21.9740878,
+    "lng": -45.34797545,
+    "count": 2
+  },
+  {
+    "city": "Vazante",
+    "state": "Minas Gerais",
+    "lat": -17.9897297,
+    "lng": -46.9004038,
+    "count": 1
+  },
+  {
+    "city": "Conceição do Rio Verde",
+    "state": "Minas Gerais",
+    "lat": -21.88116825,
+    "lng": -45.082461300000006,
+    "count": 2
+  },
+  {
+    "city": "Marliéria",
+    "state": "Minas Gerais",
+    "lat": -19.711892,
+    "lng": -42.7342201,
+    "count": 1
+  },
+  {
+    "city": "Ibiá",
+    "state": "Minas Gerais",
+    "lat": -19.4881296,
+    "lng": -46.5434717,
+    "count": 1
+  },
+  {
+    "city": "São Domingos do Prata",
+    "state": "Minas Gerais",
+    "lat": -19.8670426,
+    "lng": -42.9657972,
+    "count": 1
+  },
+  {
+    "city": "Itanhomi",
+    "state": "Minas Gerais",
+    "lat": -19.1713581,
+    "lng": -41.8634507,
+    "count": 2
+  },
+  {
+    "city": "Bom Sucesso",
+    "state": "Minas Gerais",
+    "lat": -21.0364352,
+    "lng": -44.76068836666667,
+    "count": 3
+  },
+  {
+    "city": "Piraúba",
+    "state": "Minas Gerais",
+    "lat": -21.2759512,
+    "lng": -43.0257004,
+    "count": 1
+  },
+  {
+    "city": "Patis",
+    "state": "Minas Gerais",
+    "lat": -16.0765812,
+    "lng": -44.0796909,
+    "count": 2
+  },
+  {
+    "city": "Guimarânia",
+    "state": "Minas Gerais",
+    "lat": -18.843774,
+    "lng": -46.793811,
+    "count": 2
+  },
+  {
+    "city": "Olhos-d'Água",
+    "state": "Minas Gerais",
+    "lat": -17.3980868,
+    "lng": -43.5719819,
+    "count": 1
+  },
+  {
+    "city": "Mococa",
+    "state": "São Paulo",
+    "lat": -21.4669568,
+    "lng": -47.0004925,
+    "count": 1
+  },
+  {
+    "city": "Quatro Pontes",
+    "state": "Paraná",
+    "lat": -24.573807,
+    "lng": -53.9780775,
+    "count": 1
+  },
+  {
+    "city": "Palminópolis",
+    "state": "Goiás",
+    "lat": -16.7958922,
+    "lng": -50.1650655,
+    "count": 1
+  },
+  {
+    "city": "Paracuru",
+    "state": "Ceará",
+    "lat": -3.4088264,
+    "lng": -39.0297579,
+    "count": 1
+  },
+  {
+    "city": "Sombrio",
+    "state": "Santa Catarina",
+    "lat": -29.1160895,
+    "lng": -49.6366094,
+    "count": 1
+  },
+  {
+    "city": "Esperança",
+    "state": "Paraíba",
+    "lat": -7.0116683,
+    "lng": -35.8566066,
+    "count": 1
+  },
+  {
+    "city": "Santo André",
+    "state": "São Paulo",
+    "lat": -23.7309576,
+    "lng": -46.48821296666666,
+    "count": 3
+  },
+  {
+    "city": "Bom Jesus do Itabapoana",
+    "state": "Rio de Janeiro",
+    "lat": -21.1368452,
+    "lng": -41.676707,
+    "count": 1
+  },
+  {
+    "city": "Tijucas",
+    "state": "Santa Catarina",
+    "lat": -27.2402267,
+    "lng": -48.6151725,
+    "count": 2
+  },
+  {
+    "city": "Várzea Nova",
+    "state": "Bahia",
+    "lat": -11.2465977,
+    "lng": -40.7304383,
+    "count": 1
+  },
+  {
+    "city": "Uauá",
+    "state": "Bahia",
+    "lat": -9.9148283,
+    "lng": -39.4994545,
+    "count": 1
+  },
+  {
+    "city": "Monte Santo",
+    "state": "Bahia",
+    "lat": -10.0936291,
+    "lng": -39.7290113,
+    "count": 1
+  },
+  {
+    "city": "Santo Antônio de Posse",
+    "state": "São Paulo",
+    "lat": -22.607198750000002,
+    "lng": -46.92158765,
+    "count": 2
+  },
+  {
+    "city": "São José do Rio Claro",
+    "state": "Mato Grosso",
+    "lat": -13.4484661,
+    "lng": -56.7189117,
+    "count": 2
+  },
+  {
+    "city": "Avaré",
+    "state": "São Paulo",
+    "lat": -23.1115427,
+    "lng": -48.9011897,
+    "count": 2
+  },
+  {
+    "city": "Londrina",
+    "state": "Paraná",
+    "lat": -23.32497978,
+    "lng": -51.165193079999995,
+    "count": 5
+  },
+  {
+    "city": "Conselheiro Lafaiete",
+    "state": "Minas Gerais",
+    "lat": -20.6491866,
+    "lng": -43.78289256666667,
+    "count": 3
+  },
+  {
+    "city": "Vespasiano",
+    "state": "Minas Gerais",
+    "lat": -19.7840479,
+    "lng": -43.9712634,
+    "count": 2
+  },
+  {
+    "city": "Santa Maria",
+    "state": "Rio Grande do Sul",
+    "lat": -29.71159905,
+    "lng": -53.74303505,
+    "count": 2
+  },
+  {
+    "city": "Olinda",
+    "state": "Pernambuco",
+    "lat": -7.9772125,
+    "lng": -34.8421629,
+    "count": 1
+  },
+  {
+    "city": "Desterro de Entre Rios",
+    "state": "Minas Gerais",
+    "lat": -20.647665133333334,
+    "lng": -44.3022126,
+    "count": 3
+  },
+  {
+    "city": "Jacobina",
+    "state": "Bahia",
+    "lat": -11.1576972,
+    "lng": -40.5604937,
+    "count": 1
+  },
+  {
+    "city": "Brumado",
+    "state": "Bahia",
+    "lat": -14.182845833333333,
+    "lng": -41.6080825,
+    "count": 3
+  },
+  {
+    "city": "Palmas",
+    "state": "Tocantins",
+    "lat": -10.180099,
+    "lng": -48.310781,
+    "count": 3
+  },
+  {
+    "city": "Nova Iguaçu",
+    "state": "Rio de Janeiro",
+    "lat": -22.760698,
+    "lng": -43.6003989,
+    "count": 1
+  },
+  {
+    "city": "Montenegro",
+    "state": "Rio Grande do Sul",
+    "lat": -29.68019215,
+    "lng": -51.461761499999994,
+    "count": 4
+  },
+  {
+    "city": "Seabra",
+    "state": "Bahia",
+    "lat": -12.415682,
+    "lng": -41.7630668,
+    "count": 1
+  },
+  {
+    "city": "Pedregulho",
+    "state": "São Paulo",
+    "lat": -20.2548511,
+    "lng": -47.4781032,
+    "count": 1
+  },
+  {
+    "city": "Tupi Paulista",
+    "state": "São Paulo",
+    "lat": -21.3815976,
+    "lng": -51.5626547,
+    "count": 1
+  },
+  {
+    "city": "Cabo Frio",
+    "state": "Rio de Janeiro",
+    "lat": -22.880414866666666,
+    "lng": -42.02371423333333,
+    "count": 3
+  },
+  {
+    "city": "Teodoro Sampaio",
+    "state": "São Paulo",
+    "lat": -22.528874266666666,
+    "lng": -52.17483643333333,
+    "count": 3
+  },
+  {
+    "city": "Urubici",
+    "state": "Santa Catarina",
+    "lat": -28.0143477,
+    "lng": -49.5936228,
+    "count": 1
+  },
+  {
+    "city": "Loreto",
+    "state": "Maranhão",
+    "lat": -7.6214033,
+    "lng": -45.495175,
+    "count": 1
+  },
+  {
+    "city": "João Pessoa",
+    "state": "Paraíba",
+    "lat": -7.1397072999999995,
+    "lng": -34.85682705,
+    "count": 2
+  },
+  {
+    "city": "Andaraí",
+    "state": "Bahia",
+    "lat": -12.8909705,
+    "lng": -41.3188684,
+    "count": 1
+  },
+  {
+    "city": "Valparaíso",
+    "state": "São Paulo",
+    "lat": -21.2234577,
+    "lng": -50.8673372,
+    "count": 1
+  },
+  {
+    "city": "Prudentópolis",
+    "state": "Paraná",
+    "lat": -25.209568,
+    "lng": -50.97873315,
+    "count": 2
+  },
+  {
+    "city": "Vitória da Conquista",
+    "state": "Bahia",
+    "lat": -14.88300265,
+    "lng": -40.804447675,
+    "count": 4
+  },
+  {
+    "city": "Florianópolis",
+    "state": "Santa Catarina",
+    "lat": -27.580076875000003,
+    "lng": -48.524883599999995,
+    "count": 4
+  },
+  {
+    "city": "Santana de Parnaíba",
+    "state": "São Paulo",
+    "lat": -23.4449166,
+    "lng": -46.9138463,
+    "count": 1
+  },
+  {
+    "city": "Goiânia",
+    "state": "Goiás",
+    "lat": -16.676434,
+    "lng": -49.2613998,
+    "count": 3
+  },
+  {
+    "city": "Jundiaí",
+    "state": "São Paulo",
+    "lat": -23.185610875000002,
+    "lng": -46.928519225,
+    "count": 4
+  },
+  {
+    "city": "Brejo da Madre de Deus",
+    "state": "Pernambuco",
+    "lat": -8.1817272,
+    "lng": -36.1930393,
+    "count": 1
+  },
+  {
+    "city": "Estação",
+    "state": "Rio Grande do Sul",
+    "lat": -27.9194596,
+    "lng": -52.2777387,
+    "count": 2
+  },
+  {
+    "city": "Alfenas",
+    "state": "Minas Gerais",
+    "lat": -21.4275434,
+    "lng": -45.941155,
+    "count": 1
+  },
+  {
+    "city": "Tiradentes",
+    "state": "Minas Gerais",
+    "lat": -21.1161429,
+    "lng": -44.1644894,
+    "count": 2
+  },
+  {
+    "city": "Carandaí",
+    "state": "Minas Gerais",
+    "lat": -20.9510087,
+    "lng": -43.7995088,
+    "count": 1
+  },
+  {
+    "city": "Santa Cruz do Rio Pardo",
+    "state": "São Paulo",
+    "lat": -22.9117345,
+    "lng": -49.6191693,
+    "count": 1
+  },
+  {
+    "city": "Serrinha",
+    "state": "Bahia",
+    "lat": -11.6624241,
+    "lng": -39.0121654,
+    "count": 1
+  },
+  {
+    "city": "Itaqui",
+    "state": "Rio Grande do Sul",
+    "lat": -29.1340551,
+    "lng": -56.5586174,
+    "count": 1
+  },
+  {
+    "city": "Araricá",
+    "state": "Rio Grande do Sul",
+    "lat": -29.6234337,
+    "lng": -50.9332488,
+    "count": 1
+  },
+  {
+    "city": "Itapipoca",
+    "state": "Ceará",
+    "lat": -3.4947788,
+    "lng": -39.5832801,
+    "count": 1
+  },
+  {
+    "city": "Urussanga",
+    "state": "Santa Catarina",
+    "lat": -28.5320517,
+    "lng": -49.3205909,
+    "count": 1
+  },
+  {
+    "city": "Tururu",
+    "state": "Ceará",
+    "lat": -3.5913777,
+    "lng": -39.4444709,
+    "count": 2
+  },
+  {
+    "city": "Alexandria",
+    "state": "Rio Grande do Norte",
+    "lat": -6.4161528,
+    "lng": -38.0136889,
+    "count": 1
+  },
+  {
+    "city": "São José do Vale do Rio Preto",
+    "state": "Rio de Janeiro",
+    "lat": -22.158131,
+    "lng": -42.9247444,
+    "count": 1
+  },
+  {
+    "city": "Iguaba Grande",
+    "state": "Rio de Janeiro",
+    "lat": -22.8330965,
+    "lng": -42.2246723,
+    "count": 1
+  },
+  {
+    "city": "Lauro de Freitas",
+    "state": "Bahia",
+    "lat": -12.9042179,
+    "lng": -38.3410916,
+    "count": 1
+  },
+  {
+    "city": "Juiz de Fora",
+    "state": "Minas Gerais",
+    "lat": -21.775457,
+    "lng": -43.37952943333334,
+    "count": 3
+  },
+  {
+    "city": "Uberaba",
+    "state": "Minas Gerais",
+    "lat": -19.759566,
+    "lng": -47.970825,
+    "count": 1
+  },
+  {
+    "city": "Araxá",
+    "state": "Minas Gerais",
+    "lat": -19.5616631,
+    "lng": -46.9650835,
+    "count": 1
+  },
+  {
+    "city": "Aracaju",
+    "state": "Sergipe",
+    "lat": -10.9911288,
+    "lng": -37.0723851,
+    "count": 1
+  },
+  {
+    "city": "Passos",
+    "state": "Minas Gerais",
+    "lat": -20.7324882,
+    "lng": -46.6482452,
+    "count": 1
+  },
+  {
+    "city": "Paracatu",
+    "state": "Minas Gerais",
+    "lat": -17.240647,
+    "lng": -46.8879923,
+    "count": 1
+  },
+  {
+    "city": "São João Nepomuceno",
+    "state": "Minas Gerais",
+    "lat": -21.5408456,
+    "lng": -43.0233299,
+    "count": 1
+  },
+  {
+    "city": "Uruguaiana",
+    "state": "Rio Grande do Sul",
+    "lat": -29.7799651,
+    "lng": -57.0515901,
+    "count": 1
+  },
+  {
+    "city": "Ubaporanga",
+    "state": "Minas Gerais",
+    "lat": -19.7327972,
+    "lng": -42.1075368,
+    "count": 1
+  },
+  {
+    "city": "Teixeira de Freitas",
+    "state": "Bahia",
+    "lat": -17.54781105,
+    "lng": -39.71673525,
+    "count": 2
+  },
+  {
+    "city": "Boa Vista",
+    "state": "Roraima",
+    "lat": 2.82752235,
+    "lng": -60.7238738,
+    "count": 2
+  },
+  {
+    "city": "Mossoró",
+    "state": "Rio Grande do Norte",
+    "lat": -5.179895433333333,
+    "lng": -37.36712886666667,
+    "count": 3
+  },
+  {
+    "city": "Tubarão",
+    "state": "Santa Catarina",
+    "lat": -28.4747573,
+    "lng": -48.9924457,
+    "count": 1
+  },
+  {
+    "city": "Caçador",
+    "state": "Santa Catarina",
+    "lat": -26.7810444,
+    "lng": -50.9606887,
+    "count": 1
+  },
+  {
+    "city": "Cáceres",
+    "state": "Mato Grosso",
+    "lat": -16.0426701,
+    "lng": -57.6356332,
+    "count": 1
+  },
+  {
+    "city": "Cachoeiro de Itapemirim",
+    "state": "Espírito Santo",
+    "lat": -20.8323452,
+    "lng": -41.1737083,
+    "count": 1
+  },
+  {
+    "city": "Videira",
+    "state": "Santa Catarina",
+    "lat": -27.009379799999998,
+    "lng": -51.140751449999996,
+    "count": 2
+  },
+  {
+    "city": "Sertanópolis",
+    "state": "Paraná",
+    "lat": -23.0619977,
+    "lng": -51.0236074,
+    "count": 2
+  },
+  {
+    "city": "Colatina",
+    "state": "Espírito Santo",
+    "lat": -19.5228353,
+    "lng": -40.6439089,
+    "count": 1
+  },
+  {
+    "city": "Bom Jesus",
+    "state": "Piauí",
+    "lat": -9.0660638,
+    "lng": -44.3662536,
+    "count": 1
+  },
+  {
+    "city": "Itaperuna",
+    "state": "Rio de Janeiro",
+    "lat": -21.217048,
+    "lng": -41.8755827,
+    "count": 1
+  },
+  {
+    "city": "Ouricuri",
+    "state": "Pernambuco",
+    "lat": -7.8809171,
+    "lng": -40.0878401,
+    "count": 1
+  },
+  {
+    "city": "Nova Venécia",
+    "state": "Espírito Santo",
+    "lat": -18.6835148,
+    "lng": -40.4154372,
+    "count": 1
+  },
+  {
+    "city": "Guarapari",
+    "state": "Espírito Santo",
+    "lat": -20.647987,
+    "lng": -40.4920161,
+    "count": 1
+  },
+  {
+    "city": "Bom Jardim",
+    "state": "Maranhão",
+    "lat": -3.94088,
+    "lng": -46.5906306,
+    "count": 1
+  },
+  {
+    "city": "Andradina",
+    "state": "São Paulo",
+    "lat": -20.9191068,
+    "lng": -51.3832234,
+    "count": 1
+  },
+  {
+    "city": "Feira de Santana",
+    "state": "Bahia",
+    "lat": -12.24592705,
+    "lng": -38.955590325,
+    "count": 4
+  },
+  {
+    "city": "Bom Despacho",
+    "state": "Minas Gerais",
+    "lat": -19.7444792,
+    "lng": -45.284636,
+    "count": 1
+  },
+  {
+    "city": "Nova Esperança do Piriá",
+    "state": "Pará",
+    "lat": -2.2756381,
+    "lng": -46.9737706,
+    "count": 1
+  },
+  {
+    "city": "Rurópolis",
+    "state": "Pará",
+    "lat": -4.0877013,
+    "lng": -54.9082089,
+    "count": 1
+  },
+  {
+    "city": "Uruará",
+    "state": "Pará",
+    "lat": -3.7236574,
+    "lng": -53.7310253,
+    "count": 1
+  },
+  {
+    "city": "Varginha",
+    "state": "Minas Gerais",
+    "lat": -21.5816269,
+    "lng": -45.4675351,
+    "count": 1
+  },
+  {
+    "city": "Macapá",
+    "state": "Amapá",
+    "lat": -0.0112137,
+    "lng": -51.0895555,
+    "count": 1
+  },
+  {
+    "city": "Abaetetuba",
+    "state": "Pará",
+    "lat": -1.7242846,
+    "lng": -48.8641653,
+    "count": 1
+  },
+  {
+    "city": "Gurupi",
+    "state": "Tocantins",
+    "lat": -11.7381169,
+    "lng": -49.0775653,
+    "count": 1
+  },
+  {
+    "city": "Petrolina",
+    "state": "Pernambuco",
+    "lat": -9.39326505,
+    "lng": -40.5212739,
+    "count": 2
+  },
+  {
+    "city": "Maceió",
+    "state": "Alagoas",
+    "lat": -9.662657625000001,
+    "lng": -35.743335175,
+    "count": 4
+  },
+  {
+    "city": "Senhor do Bonfim",
+    "state": "Bahia",
+    "lat": -10.4626971,
+    "lng": -40.1939652,
+    "count": 1
+  },
+  {
+    "city": "Sousa",
+    "state": "Paraíba",
+    "lat": -6.7567611,
+    "lng": -38.2288857,
+    "count": 1
+  },
+  {
+    "city": "Monte Carmelo",
+    "state": "Minas Gerais",
+    "lat": -18.737924925,
+    "lng": -47.484259475,
+    "count": 4
+  },
+  {
+    "city": "Guarantã do Norte",
+    "state": "Mato Grosso",
+    "lat": -9.9547845,
+    "lng": -54.9085599,
+    "count": 2
+  },
+  {
+    "city": "Bauru",
+    "state": "São Paulo",
+    "lat": -22.3343297,
+    "lng": -49.0565809,
+    "count": 2
+  },
+  {
+    "city": "Palotina",
+    "state": "Paraná",
+    "lat": -24.28734995,
+    "lng": -53.84355325,
+    "count": 2
+  },
+  {
+    "city": "Faxinal dos Guedes",
+    "state": "Santa Catarina",
+    "lat": -26.8530816,
+    "lng": -52.2536615,
+    "count": 1
+  },
+  {
+    "city": "Sobradinho",
+    "state": "Distrito Federal",
+    "lat": -15.7199349,
+    "lng": -47.7379133,
+    "count": 1
+  },
+  {
+    "city": "Brejo",
+    "state": "Maranhão",
+    "lat": -3.6815106,
+    "lng": -42.7546724,
+    "count": 1
+  },
+  {
+    "city": "Itabi",
+    "state": "Sergipe",
+    "lat": -10.153314300000002,
+    "lng": -37.138876100000004,
+    "count": 2
+  },
+  {
+    "city": "Miguel Pereira",
+    "state": "Rio de Janeiro",
+    "lat": -22.4628575,
+    "lng": -43.4800075,
+    "count": 2
+  },
+  {
+    "city": "Amparo",
+    "state": "São Paulo",
+    "lat": -22.7069743,
+    "lng": -46.7707553,
+    "count": 1
+  },
+  {
+    "city": "Raposa",
+    "state": "Maranhão",
+    "lat": -2.456922,
+    "lng": -44.1464004,
+    "count": 1
+  },
+  {
+    "city": "Ibiapina",
+    "state": "Ceará",
+    "lat": -3.9508255,
+    "lng": -41.0886115,
+    "count": 1
+  },
+  {
+    "city": "Novo Acordo",
+    "state": "Tocantins",
+    "lat": -10.337816,
+    "lng": -47.370385,
+    "count": 1
+  },
+  {
+    "city": "Rosário do Sul",
+    "state": "Rio Grande do Sul",
+    "lat": -30.2470961,
+    "lng": -54.9175286,
+    "count": 1
+  },
+  {
+    "city": "Caicó",
+    "state": "Rio Grande do Norte",
+    "lat": -6.4416997,
+    "lng": -37.0865766,
+    "count": 1
+  },
+  {
+    "city": "Pouso Alegre",
+    "state": "Minas Gerais",
+    "lat": -22.2209858,
+    "lng": -45.9163625,
+    "count": 2
+  },
+  {
+    "city": "Blumenau",
+    "state": "Santa Catarina",
+    "lat": -26.8922455,
+    "lng": -49.0824123,
+    "count": 2
+  },
+  {
+    "city": "Barreiras",
+    "state": "Bahia",
+    "lat": -11.714345,
+    "lng": -45.9800853,
+    "count": 1
+  },
+  {
+    "city": "Campina Grande",
+    "state": "Paraíba",
+    "lat": -7.2291376,
+    "lng": -35.8945265,
+    "count": 1
+  },
+  {
+    "city": "Itajaí",
+    "state": "Santa Catarina",
+    "lat": -26.9755842,
+    "lng": -48.7944992,
+    "count": 1
+  },
+  {
+    "city": "Cruz das Almas",
+    "state": "Bahia",
+    "lat": -12.669232133333333,
+    "lng": -39.09494983333333,
+    "count": 3
+  },
+  {
+    "city": "Ribeirão Grande",
+    "state": "São Paulo",
+    "lat": -24.18332165,
+    "lng": -48.38802715,
+    "count": 2
+  },
+  {
+    "city": "Itariri",
+    "state": "São Paulo",
+    "lat": -24.2871203,
+    "lng": -47.1807429,
+    "count": 1
+  },
+  {
+    "city": "Itiquira",
+    "state": "Bahia",
+    "lat": -10.76749075,
+    "lng": -44.348530600000004,
+    "count": 2
+  },
+  {
+    "city": "Riachão das Neves",
+    "state": "Bahia",
+    "lat": -11.6744042,
+    "lng": -45.7227717,
+    "count": 1
+  },
+  {
+    "city": "São José da Vitória",
+    "state": "Bahia",
+    "lat": -15.0821201,
+    "lng": -39.3398929,
+    "count": 1
+  },
+  {
+    "city": "Paranacity",
+    "state": "Paraná",
+    "lat": -22.8771618,
+    "lng": -52.1785543,
+    "count": 1
+  },
+  {
+    "city": "Garanhuns",
+    "state": "Pernambuco",
+    "lat": -8.8840946,
+    "lng": -36.490286,
+    "count": 1
+  },
+  {
+    "city": "São Jerônimo",
+    "state": "Rio Grande do Sul",
+    "lat": -29.9622332,
+    "lng": -51.71553565000001,
+    "count": 2
+  },
+  {
+    "city": "Petrópolis",
+    "state": "Rio de Janeiro",
+    "lat": -22.5270325,
+    "lng": -43.1677569,
+    "count": 1
+  },
+  {
+    "city": "Altos",
+    "state": "Piauí",
+    "lat": -5.0462227,
+    "lng": -42.4547941,
+    "count": 1
+  },
+  {
+    "city": "São Gonçalo",
+    "state": "Rio de Janeiro",
+    "lat": -22.8290757,
+    "lng": -43.0740522,
+    "count": 1
+  },
+  {
+    "city": "Mariana",
+    "state": "Minas Gerais",
+    "lat": -20.3776779,
+    "lng": -43.4169358,
+    "count": 1
+  },
+  {
+    "city": "Limeira do Oeste",
+    "state": "Minas Gerais",
+    "lat": -19.5368893,
+    "lng": -50.5569736,
+    "count": 1
+  },
+  {
+    "city": "Cássia",
+    "state": "Minas Gerais",
+    "lat": -20.57921975,
+    "lng": -46.927027800000005,
+    "count": 2
+  },
+  {
+    "city": "Florestal",
+    "state": "Minas Gerais",
+    "lat": -19.8875936,
+    "lng": -44.4210146,
+    "count": 1
+  },
+  {
+    "city": "Matozinhos",
+    "state": "Minas Gerais",
+    "lat": -19.56534735,
+    "lng": -44.0679236,
+    "count": 2
+  },
+  {
+    "city": "Abaíra",
+    "state": "Bahia",
+    "lat": -13.2729585,
+    "lng": -41.69822465,
+    "count": 2
+  },
+  {
+    "city": "Algodões",
+    "state": "Bahia",
+    "lat": -10.6847104,
+    "lng": -39.0530882,
+    "count": 1
+  },
+  {
+    "city": "Lajedinho",
+    "state": "Bahia",
+    "lat": -12.3568982,
+    "lng": -40.9057952,
+    "count": 2
+  },
+  {
+    "city": "Rio de Contas",
+    "state": "Bahia",
+    "lat": -13.547929199999999,
+    "lng": -41.7254046,
+    "count": 2
+  },
+  {
+    "city": "Quirinópolis",
+    "state": "Goiás",
+    "lat": -18.4487534,
+    "lng": -50.435451,
+    "count": 1
+  },
+  {
+    "city": "Timon",
+    "state": "Maranhão",
+    "lat": -5.090947849999999,
+    "lng": -42.834347199999996,
+    "count": 2
+  },
+  {
+    "city": "Isaías Coelho",
+    "state": "Piauí",
+    "lat": -7.7224541,
+    "lng": -41.6370773,
+    "count": 2
+  },
+  {
+    "city": "Jacobina do Piauí",
+    "state": "Piauí",
+    "lat": -8.0225496,
+    "lng": -41.3489609,
+    "count": 1
+  },
+  {
+    "city": "Livramento",
+    "state": "Paraíba",
+    "lat": -7.3377363,
+    "lng": -37.0329973,
+    "count": 1
+  },
+  {
+    "city": "Matureia",
+    "state": "Paraíba",
+    "lat": -7.2656371,
+    "lng": -37.3477435,
+    "count": 1
+  },
+  {
+    "city": "Amontada",
+    "state": "Ceará",
+    "lat": -3.0974825499999996,
+    "lng": -39.69439745,
+    "count": 2
+  },
+  {
+    "city": "Tabatinga",
+    "state": "Amazonas",
+    "lat": -4.2307611,
+    "lng": -69.9437456,
+    "count": 1
+  },
+  {
+    "city": "Aracati",
+    "state": "Ceará",
+    "lat": -4.526116,
+    "lng": -37.7021628,
+    "count": 1
+  },
+  {
+    "city": "São Leopoldo",
+    "state": "Rio Grande do Sul",
+    "lat": -29.77177195,
+    "lng": -51.143584149999995,
+    "count": 2
+  },
+  {
+    "city": "Confins",
+    "state": "Minas Gerais",
+    "lat": -19.6346711,
+    "lng": -43.9845222,
+    "count": 1
+  },
+  {
+    "city": "Camaçari",
+    "state": "Bahia",
+    "lat": -12.6815442,
+    "lng": -38.204379599999996,
+    "count": 2
+  },
+  {
+    "city": "Toledo",
+    "state": "Paraná",
+    "lat": -24.7334285,
+    "lng": -53.7407392,
+    "count": 1
+  },
+  {
+    "city": "Valença",
+    "state": "Bahia",
+    "lat": -13.375842,
+    "lng": -39.0766505,
+    "count": 1
+  },
+  {
+    "city": "Itaituba",
+    "state": "Pará",
+    "lat": -5.5853891,
+    "lng": -57.3030192,
+    "count": 1
+  },
+  {
+    "city": "Novo Hamburgo",
+    "state": "Rio Grande do Sul",
+    "lat": -29.7600158,
+    "lng": -51.0447338,
+    "count": 2
+  },
+  {
+    "city": "Peruíbe",
+    "state": "São Paulo",
+    "lat": -24.3055916,
+    "lng": -47.0030413,
+    "count": 1
+  },
+  {
+    "city": "Extremoz",
+    "state": "Rio Grande do Norte",
+    "lat": -5.69490905,
+    "lng": -35.24495485,
+    "count": 2
+  },
+  {
+    "city": "Duque de Caxias",
+    "state": "Rio de Janeiro",
+    "lat": -22.7921062,
+    "lng": -43.300599,
+    "count": 1
+  },
+  {
+    "city": "Sabará",
+    "state": "Minas Gerais",
+    "lat": -19.8794452,
+    "lng": -43.9004545,
+    "count": 1
+  },
+  {
+    "city": "Carazinho",
+    "state": "Rio Grande do Sul",
+    "lat": -28.2849335,
+    "lng": -52.7878428,
+    "count": 1
+  },
+  {
+    "city": "Capelinha",
+    "state": "Minas Gerais",
+    "lat": -17.6964542,
+    "lng": -42.5140808,
+    "count": 1
+  },
+  {
+    "city": "Socorro",
+    "state": "São Paulo",
+    "lat": -22.5884248,
+    "lng": -46.523975,
+    "count": 1
+  },
+  {
+    "city": "Cotiporã",
+    "state": "Rio Grande do Sul",
+    "lat": -28.9767147,
+    "lng": -51.6940232,
+    "count": 1
+  },
+  {
+    "city": "Belford Roxo",
+    "state": "Rio de Janeiro",
+    "lat": -22.7535898,
+    "lng": -43.3614502,
+    "count": 2
+  },
+  {
+    "city": "Santa Maria",
+    "state": "Distrito Federal",
+    "lat": -16.0044929,
+    "lng": -47.9880265,
+    "count": 1
+  },
+  {
+    "city": "Gama",
+    "state": "Distrito Federal",
+    "lat": -16.0012646,
+    "lng": -48.059697,
+    "count": 1
+  },
+  {
+    "city": "Farroupilha",
+    "state": "Rio Grande do Sul",
+    "lat": -29.2260579,
+    "lng": -51.3371774,
+    "count": 1
+  },
+  {
+    "city": "Lago Norte",
+    "state": "Distrito Federal",
+    "lat": -15.7150439,
+    "lng": -47.880931,
+    "count": 1
+  },
+  {
+    "city": "Foz do Iguaçu",
+    "state": "Paraná",
+    "lat": -25.52193408,
+    "lng": -54.55002158,
+    "count": 5
+  },
+  {
+    "city": "Jacutinga",
+    "state": "Minas Gerais",
+    "lat": -22.2814909,
+    "lng": -46.6110785,
+    "count": 1
+  },
+  {
+    "city": "Gravataí",
+    "state": "Rio Grande do Sul",
+    "lat": -29.9044808,
+    "lng": -51.0621884,
+    "count": 1
+  },
+  {
+    "city": "Esteio",
+    "state": "Rio Grande do Sul",
+    "lat": -29.8583865,
+    "lng": -51.1367858,
+    "count": 1
+  },
+  {
+    "city": "Dário Meira",
+    "state": "Bahia",
+    "lat": -14.4334107,
+    "lng": -39.9018841,
+    "count": 1
+  },
+  {
+    "city": "Buri",
+    "state": "São Paulo",
+    "lat": -23.7937845,
+    "lng": -48.5982731,
+    "count": 1
+  },
+  {
+    "city": "Cacequi",
+    "state": "Rio Grande do Sul",
+    "lat": -29.8766786,
+    "lng": -54.82276,
+    "count": 1
+  },
+  {
+    "city": "Barra do Jacaré",
+    "state": "Paraná",
+    "lat": -23.0857363,
+    "lng": -50.2384774,
+    "count": 1
+  },
+  {
+    "city": "Paulista",
+    "state": "Pernambuco",
+    "lat": -7.8826484,
+    "lng": -34.829289,
+    "count": 1
+  },
+  {
+    "city": "Santa Quitéria do Maranhão",
+    "state": "Maranhão",
+    "lat": -3.5002679,
+    "lng": -42.5626716,
+    "count": 1
+  },
+  {
+    "city": "Rolim de Moura",
+    "state": "Rondônia",
+    "lat": -11.7255222,
+    "lng": -61.7910963,
+    "count": 1
+  },
+  {
+    "city": "Queimados",
+    "state": "Rio de Janeiro",
+    "lat": -22.7066588,
+    "lng": -43.5633045,
+    "count": 1
+  },
+  {
+    "city": "Tonantins",
+    "state": "Amazonas",
+    "lat": -2.7723703,
+    "lng": -67.6633417,
+    "count": 1
+  },
+  {
+    "city": "Sobral",
+    "state": "Ceará",
+    "lat": -3.8776416,
+    "lng": -40.0208739,
+    "count": 1
+  },
+  {
+    "city": "Santo Amaro da Imperatriz",
+    "state": "Santa Catarina",
+    "lat": -27.6827912,
+    "lng": -48.7580893,
+    "count": 1
+  },
+  {
+    "city": "Poá",
+    "state": "São Paulo",
+    "lat": -23.5180031,
+    "lng": -46.3413385,
+    "count": 3
+  },
+  {
+    "city": "Carrancas",
+    "state": "Minas Gerais",
+    "lat": -21.4888301,
+    "lng": -44.6429296,
+    "count": 2
+  },
+  {
+    "city": "Itambé do Mato Dentro",
+    "state": "Minas Gerais",
+    "lat": -19.4155125,
+    "lng": -43.3221233,
+    "count": 1
+  },
+  {
+    "city": "Corumbá",
+    "state": "Mato Grosso do Sul",
+    "lat": -19.0005587,
+    "lng": -57.6524608,
+    "count": 2
+  },
+  {
+    "city": "Bom Jesus dos Perdões",
+    "state": "São Paulo",
+    "lat": -23.1345553,
+    "lng": -46.4650763,
+    "count": 1
+  },
+  {
+    "city": "Oliveira",
+    "state": "Minas Gerais",
+    "lat": -20.6964177,
+    "lng": -44.8287981,
+    "count": 1
+  },
+  {
+    "city": "Jaraguá do Sul",
+    "state": "Santa Catarina",
+    "lat": -26.4875589,
+    "lng": -49.1041772,
+    "count": 1
+  },
+  {
+    "city": "Parnaíba",
+    "state": "Piauí",
+    "lat": -2.9084423,
+    "lng": -41.772868,
+    "count": 1
+  },
+  {
+    "city": "Palhoça",
+    "state": "Santa Catarina",
+    "lat": -27.8454042,
+    "lng": -48.5897848,
+    "count": 1
+  },
+  {
+    "city": "Barra do Bugres",
+    "state": "Mato Grosso",
+    "lat": -15.070628725,
+    "lng": -57.181510425000006,
+    "count": 4
+  },
+  {
+    "city": "Nova Andradina",
+    "state": "Mato Grosso do Sul",
+    "lat": -22.2514356,
+    "lng": -53.3584564,
+    "count": 1
+  },
+  {
+    "city": "Capivari de Baixo",
+    "state": "Santa Catarina",
+    "lat": -28.4469648,
+    "lng": -48.9564695,
+    "count": 1
+  },
+  {
+    "city": "Maracaju",
+    "state": "Mato Grosso do Sul",
+    "lat": -21.6268306,
+    "lng": -55.1594802,
+    "count": 2
+  },
+  {
+    "city": "Coari",
+    "state": "Amazonas",
+    "lat": -4.0879812,
+    "lng": -63.1469301,
+    "count": 1
+  },
+  {
+    "city": "Ceilândia",
+    "state": "Distrito Federal",
+    "lat": -15.834750833333333,
+    "lng": -48.106839433333334,
+    "count": 3
+  },
+  {
+    "city": "Riacho Fundo II",
+    "state": "Distrito Federal",
+    "lat": -15.9019167,
+    "lng": -48.0484658,
+    "count": 1
+  },
+  {
+    "city": "Riacho Fundo",
+    "state": "Distrito Federal",
+    "lat": -15.8806385,
+    "lng": -48.018940799999996,
+    "count": 2
+  },
+  {
+    "city": "Malta",
+    "state": "Paraíba",
+    "lat": -6.9070068,
+    "lng": -37.5194924,
+    "count": 1
+  },
+  {
+    "city": "Mateiros",
+    "state": "Tocantins",
+    "lat": -10.5461372,
+    "lng": -46.4205619,
+    "count": 1
+  },
+  {
+    "city": "Barra do Ribeiro",
+    "state": "Rio Grande do Sul",
+    "lat": -30.2931563,
+    "lng": -51.3015648,
+    "count": 1
+  },
+  {
+    "city": "Taguatinga",
+    "state": "Distrito Federal",
+    "lat": -15.7991245,
+    "lng": -48.1013683,
+    "count": 2
+  },
+  {
+    "city": "Pindamonhangaba",
+    "state": "São Paulo",
+    "lat": -22.922618,
+    "lng": -45.4620101,
+    "count": 2
+  },
+  {
+    "city": "Crato",
+    "state": "Ceará",
+    "lat": -7.231484466666667,
+    "lng": -39.41035273333333,
+    "count": 3
+  },
+  {
+    "city": "Praia Grande",
+    "state": "Santa Catarina",
+    "lat": -29.1970184,
+    "lng": -49.9511636,
+    "count": 1
+  },
+  {
+    "city": "Arame",
+    "state": "Maranhão",
+    "lat": -4.861755,
+    "lng": -46.0075943,
+    "count": 1
+  },
+  {
+    "city": "Guará",
+    "state": "Distrito Federal",
+    "lat": -15.8160956,
+    "lng": -47.9815945,
+    "count": 2
+  },
+  {
+    "city": "Botucatu",
+    "state": "São Paulo",
+    "lat": -22.8919519,
+    "lng": -48.4921047,
+    "count": 1
+  },
+  {
+    "city": "Ibirité",
+    "state": "Minas Gerais",
+    "lat": -20.0234992,
+    "lng": -44.0596367,
+    "count": 1
+  },
+  {
+    "city": "Raul Soares",
+    "state": "Minas Gerais",
+    "lat": -20.100647,
+    "lng": -42.4527118,
+    "count": 1
+  },
+  {
+    "city": "Carmo de Minas",
+    "state": "Minas Gerais",
+    "lat": -22.123262,
+    "lng": -45.1312692,
+    "count": 1
+  },
+  {
+    "city": "Guiricema",
+    "state": "Minas Gerais",
+    "lat": -21.0087241,
+    "lng": -42.7187076,
+    "count": 1
+  },
+  {
+    "city": "Águas Vermelhas",
+    "state": "Minas Gerais",
+    "lat": -15.7442993,
+    "lng": -41.4574892,
+    "count": 1
+  },
+  {
+    "city": "Bento Gonçalves",
+    "state": "Rio Grande do Sul",
+    "lat": -29.1113743,
+    "lng": -51.5968914,
+    "count": 1
+  },
+  {
+    "city": "Caraguatatuba",
+    "state": "São Paulo",
+    "lat": -23.6240971,
+    "lng": -45.4184989,
+    "count": 1
+  },
+  {
+    "city": "Cananéia",
+    "state": "São Paulo",
+    "lat": -25.0045262,
+    "lng": -47.9323654,
+    "count": 1
+  },
+  {
+    "city": "Macaúbas",
+    "state": "Bahia",
+    "lat": -13.0199202,
+    "lng": -42.6918803,
+    "count": 1
+  },
+  {
+    "city": "Pereira Barreto",
+    "state": "São Paulo",
+    "lat": -20.6447902,
+    "lng": -51.1117994,
+    "count": 1
+  },
+  {
+    "city": "Campo Largo",
+    "state": "Paraná",
+    "lat": -25.4629737,
+    "lng": -49.5292282,
+    "count": 2
+  },
+  {
+    "city": "São José do Norte",
+    "state": "Rio Grande do Sul",
+    "lat": -32.0159861,
+    "lng": -52.0415734,
+    "count": 1
+  },
+  {
+    "city": "Três Coroas",
+    "state": "Rio Grande do Sul",
+    "lat": -29.5175265,
+    "lng": -50.7788662,
+    "count": 1
+  },
+  {
+    "city": "Jaborandi",
+    "state": "São Paulo",
+    "lat": -20.6885226,
+    "lng": -48.4145674,
+    "count": 1
+  },
+  {
+    "city": "Faxinal do Soturno",
+    "state": "Rio Grande do Sul",
+    "lat": -29.5782501,
+    "lng": -53.4468554,
+    "count": 1
+  },
+  {
+    "city": "Paraíso do Sul",
+    "state": "Rio Grande do Sul",
+    "lat": -29.7284037,
+    "lng": -53.1830529,
+    "count": 1
+  },
+  {
+    "city": "Arenópolis",
+    "state": "Goiás",
+    "lat": -16.3868342,
+    "lng": -51.5597691,
+    "count": 2
+  },
+  {
+    "city": "Lagarto",
+    "state": "Sergipe",
+    "lat": -10.9166746,
+    "lng": -37.6709604,
+    "count": 2
+  },
+  {
+    "city": "Nova Trento",
+    "state": "Santa Catarina",
+    "lat": -27.2848899,
+    "lng": -48.9243869,
+    "count": 1
+  },
+  {
+    "city": "São João do Oeste",
+    "state": "Santa Catarina",
+    "lat": -27.0972701,
+    "lng": -53.592285,
+    "count": 1
+  },
+  {
+    "city": "Paulo Lopes",
+    "state": "Santa Catarina",
+    "lat": -27.9643155,
+    "lng": -48.6830374,
+    "count": 1
+  },
+  {
+    "city": "Farias Brito",
+    "state": "Ceará",
+    "lat": -6.9272496,
+    "lng": -39.5726335,
+    "count": 1
+  },
+  {
+    "city": "Alcântaras",
+    "state": "Ceará",
+    "lat": -3.5851175000000004,
+    "lng": -40.5453775,
+    "count": 3
+  },
+  {
+    "city": "Chapada dos Guimarães",
+    "state": "Mato Grosso",
+    "lat": -15.4601659,
+    "lng": -55.7487092,
+    "count": 2
+  },
+  {
+    "city": "Cruz do Espírito Santo",
+    "state": "Paraíba",
+    "lat": -7.1413498,
+    "lng": -35.0886078,
+    "count": 1
+  },
+  {
+    "city": "Itatuba",
+    "state": "Paraíba",
+    "lat": -7.3786116,
+    "lng": -35.6282932,
+    "count": 1
+  },
+  {
+    "city": "Aurora",
+    "state": "Santa Catarina",
+    "lat": -27.3040776,
+    "lng": -49.6354748,
+    "count": 2
+  },
+  {
+    "city": "Canhoba",
+    "state": "Sergipe",
+    "lat": -10.1390673,
+    "lng": -36.9739073,
+    "count": 1
+  },
+  {
+    "city": "Presidente Juscelino",
+    "state": "Minas Gerais",
+    "lat": -18.6363112,
+    "lng": -44.0611077,
+    "count": 1
+  }
+]
