@@ -147,9 +147,9 @@ const handleFileUpload = (e) => {
 
   reader.onload = (evt) => {
     try {
-      const data = new Uint8Array(evt.target.result);
-
       console.log('Reading workbook...');
+
+      const data = new Uint8Array(evt.target.result);
 
       const workbook = XLSX.read(data, {
         type: 'array'
