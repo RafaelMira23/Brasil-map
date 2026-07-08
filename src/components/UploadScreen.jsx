@@ -151,7 +151,7 @@ const handleFileUpload = (e) => {
 
       console.log('Reading workbook...');
 
-      const workbook = XLSX.read(bstr, {
+      const workbook = XLSX.read(data, {
         type: 'array'
       });
 
