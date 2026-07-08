@@ -138,7 +138,7 @@ export default function UploadScreen({
 const handleFileUpload = (e) => {
   const file = e.target.files[0];
 
-  if (!file) ret  urn;
+  if (!file) return;
 
   console.log('========== IMPORT START ==========');
   console.log('File:', file.name);
