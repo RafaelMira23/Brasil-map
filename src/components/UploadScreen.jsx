@@ -147,12 +147,12 @@ const handleFileUpload = (e) => {
 
   reader.onload = (evt) => {
     try {
-      const bstr = evt.target.result;
+      const data = new Uint8Array(evt.target.result);
 
       console.log('Reading workbook...');
 
       const workbook = XLSX.read(bstr, {
-        type: 'binary'
+        type: 'array'
       });
 
       console.log('Workbook loaded');
@@ -374,7 +374,7 @@ const handleFileUpload = (e) => {
     );
   };
 
-  reader.readAsBinaryString(file);
+  reader.readAsArrayBuffer(file);
 };
   return (
     <div
