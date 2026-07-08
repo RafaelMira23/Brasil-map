@@ -135,149 +135,247 @@ export default function UploadScreen({
   onTriggerMock,
   CATEGORIES
 }) {
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
+const handleFileUpload = (e) => {
+  const file = e.target.files[0];
 
-    if (!file) return;
+  if (!file) ret  urn;
 
-    const reader = new FileReader();
+  console.log('========== IMPORT START ==========');
+  console.log('File:', file.name);
 
-    reader.onload = (evt) => {
-      try {
-        const bstr = evt.target.result;
+  const reader = new FileReader();
 
-        const workbook = XLSX.read(bstr, {
-          type: 'binary'
-        });
+  reader.onload = (evt) => {
+    try {
+      const bstr = evt.target.result;
 
-        const sheetName = workbook.SheetNames[0];
+      console.log('Reading workbook...');
 
-        const sheet = workbook.Sheets[sheetName];
+      const workbook = XLSX.read(bstr, {
+        type: 'binary'
+      });
 
-        const json = XLSX.utils.sheet_to_json(sheet);
+      console.log('Workbook loaded');
+      console.log(workbook);
 
-        let geocodedCount = 0;
-        let droppedCount = 0;
+      const sheetName = workbook.SheetNames[0];
 
-        const parsed = json
-          .map((row, idx) => {
-            const name =
-              getField(row, ['Person Full Name']) ||
-              'Sem Nome';
+      console.log('Sheet:', sheetName);
 
-            const email =
-              getField(row, ['Person Work Email']);
+      const sheet = workbook.Sheets[sheetName];
 
-            const id =
-              getField(row, ['SESA Number']) ||
-              `ID-${idx}`;
+      const json = XLSX.utils.sheet_to_json(sheet);
 
-            const manager =
-              getField(row, ['Manager Full Name']);
+      console.log('Rows found:', json.length);
+      console.log('First row:', json[0]);
 
-            const rawCity =
-              getField(row, ['City of Work']);
+      const BRAZIL_CITIES = {
+        'SAO PAULO': { lat: -23.5505, lng: -46.6333, state: 'SP' },
+        'RIO DE JANEIRO': { lat: -22.9068, lng: -43.1729, state: 'RJ' },
+        'CURITIBA': { lat: -25.4284, lng: -49.2733, state: 'PR' },
+        'BLUMENAU': { lat: -26.9194, lng: -49.0661, state: 'SC' },
+        'BELO HORIZONTE': { lat: -19.9167, lng: -43.9345, state: 'MG' },
+        'PORTO ALEGRE': { lat: -30.0346, lng: -51.2177, state: 'RS' },
+        'GOIANIA': { lat: -16.6869, lng: -49.2648, state: 'GO' },
+        'SALVADOR': { lat: -12.9714, lng: -38.5014, state: 'BA' },
+        'FORTALEZA': { lat: -3.7319, lng: -38.5267, state: 'CE' },
+        'BRASILIA': { lat: -15.7939, lng: -47.8828, state: 'DF' },
+        'RECIFE': { lat: -8.0476, lng: -34.8770, state: 'PE' },
+        'BELEM': { lat: -1.4558, lng: -48.4902, state: 'PA' },
+        'MANAUS': { lat: -3.1190, lng: -60.0217, state: 'AM' },
+        'NATAL': { lat: -5.7945, lng: -35.2110, state: 'RN' },
+        'PIRACICABA': { lat: -22.7338, lng: -47.6476, state: 'SP' },
+        'PINHAIS': { lat: -25.4440, lng: -49.1921, state: 'PR' }
+      };
 
-            const vendedoresRaw =
-              getField(row, ['Vendedores']);
+      let geocodedCount = 0;
+      let droppedCount = 0;
 
-            const cityKey = normalize(rawCity);
+      const parsed = [];
 
-            const cityMatch =
-              BRAZIL_CITIES[cityKey];
+      json.forEach((row, idx) => {
+        try {
+          const name =
+            getField(row, ['Person Full Name']) ||
+            'Sem Nome';
 
-            let coordinates = null;
-            let resolvedState = null;
-            let geocoded = false;
+          const email =
+            getField(row, ['Person Work Email']);
 
-            if (cityMatch) {
-              coordinates = [
-                cityMatch.lat,
-                cityMatch.lng
-              ];
+          const id =
+            getField(row, ['SESA Number']) ||
+            `ID-${idx}`;
 
-              resolvedState =
-                cityMatch.state;
+          const manager =
+            getField(row, ['Manager Full Name']);
 
-              geocoded = true;
-              geocodedCount++;
-            } else {
-              droppedCount++;
-            }
+          const rawCity =
+            getField(row, ['City of Work']);
 
-            let categoria = 'Sem Categoria';
-            let categoria_foco = null;
+          const vendedoresRaw =
+            getField(row, ['Vendedores']);
 
-            if (vendedoresRaw) {
-              const parts =
-                vendedoresRaw.split(' - ');
+          const cityKey = normalize(rawCity);
 
-              categoria =
-                parts[0]?.trim() ||
-                'Sem Categoria';
+          const cityMatch =
+            BRAZIL_CITIES[cityKey];
 
-              categoria_foco =
-                parts[1]?.trim() ||
-                null;
-            }
+          if (!cityMatch) {
+            console.warn(
+              `Cidade não encontrada: ${rawCity}`
+            );
 
-            const catObj =
-              CATEGORIES.find(
-                c =>
-                  normalize(c.acronym) ===
-                  normalize(categoria)
-              ) || {
-                acronym: categoria,
-                color: '#888888'
-              };
+            droppedCount++;
+            return;
+          }
 
-            return {
-              id,
-              nNumber: id,
+          let categoria = 'Sem Categoria';
+          let categoria_foco = null;
 
-              name,
-              email,
+          if (
+            vendedoresRaw !== undefined &&
+            vendedoresRaw !== null &&
+            vendedoresRaw !== ''
+          ) {
+            const parts = String(
+              vendedoresRaw
+            ).split(' - ');
 
-              managerName: manager,
+            categoria =
+              parts[0]?.trim() ||
+              'Sem Categoria';
 
-              city: rawCity
-                ? toTitleCase(rawCity)
-                : 'Não Mapeada',
+            categoria_foco =
+              parts[1]?.trim() ||
+              null;
+          }
 
-              state: resolvedState,
-
-              coordinates,
-
-              category: catObj,
-              subcategory: categoria_foco,
-
-              geocoded
+          const catObj =
+            (CATEGORIES || []).find(
+              c =>
+                normalize(c.acronym) ===
+                normalize(categoria)
+            ) || {
+              acronym: categoria,
+              color: '#888888'
             };
-          })
-          .filter(
-            person =>
-              person.coordinates !== null
+
+          const person = {
+            id,
+            nNumber: id,
+
+            name,
+            email,
+
+            managerName: manager,
+
+            city: rawCity
+              ? toTitleCase(rawCity)
+              : 'Não Mapeada',
+
+            state: cityMatch.state,
+
+            coordinates: [
+              cityMatch.lat,
+              cityMatch.lng
+            ],
+
+            category: catObj,
+
+            subcategory:
+              categoria_foco,
+
+            geocoded: true
+          };
+
+          parsed.push(person);
+
+          geocodedCount++;
+
+          console.log(
+            `Row ${idx + 2} OK`,
+            person
+          );
+        } catch (rowError) {
+          console.error(
+            '================================='
           );
 
-        onDataLoaded(parsed);
+          console.error(
+            `ERROR PROCESSING ROW ${idx + 2}`
+          );
 
-        alert(
-          `Importação concluída.\n\n` +
-          `Geocodificados: ${geocodedCount}\n` +
-          `Descartados: ${droppedCount}`
-        );
-      } catch (err) {
-        alert(
-          'Erro ao ler o arquivo Excel. Verifique o formato das colunas.'
-        );
+          console.error(row);
 
-        console.error(err);
-      }
-    };
+          console.error(
+            rowError?.message
+          );
 
-    reader.readAsBinaryString(file);
+          console.error(
+            rowError?.stack
+          );
+
+          console.error(rowError);
+        }
+      });
+
+      console.log('========== IMPORT FINISHED ==========');
+      console.log('Imported:', parsed.length);
+      console.log('Geocoded:', geocodedCount);
+      console.log('Dropped:', droppedCount);
+
+      onDataLoaded(parsed);
+
+      alert(
+        `Importação concluída.\n\n` +
+        `Importados: ${parsed.length}\n` +
+        `Geocodificados: ${geocodedCount}\n` +
+        `Descartados: ${droppedCount}\n\n` +
+        `Veja o Console (F12) para detalhes.`
+      );
+    } catch (err) {
+      console.error(
+        '================================='
+      );
+
+      console.error(
+        'ERRO GERAL DA IMPORTAÇÃO'
+      );
+
+      console.error(
+        'Mensagem:',
+        err?.message
+      );
+
+      console.error(
+        'Stack:',
+        err?.stack
+      );
+
+      console.error(err);
+
+      alert(
+        `Erro ao ler Excel.\n\n` +
+        `Mensagem:\n${err?.message}\n\n` +
+        `Abra o Console (F12) para ver o stack completo.`
+      );
+    }
   };
 
+  reader.onerror = (error) => {
+    console.error(
+      'FILE READER ERROR'
+    );
+
+    console.error(error);
+
+    alert(
+      'Erro ao carregar arquivo.'
+    );
+  };
+
+  reader.readAsBinaryString(file);
+};
   return (
     <div
       style={{
