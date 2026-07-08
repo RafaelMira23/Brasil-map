@@ -135,134 +135,246 @@ export default function UploadScreen({
   onTriggerMock,
   CATEGORIES
 }) {
-reader.onload = (evt) => {
-  try {
-    console.log('========== IMPORT START ==========');
+const handleFileUpload = (e) => {
+  const file = e.target.files[0];
 
-    console.log('Nome:', file.name);
-    console.log('Tipo:', file.type);
-    console.log('Tamanho:', file.size);
+  if (!file) return;
 
-    const data = new Uint8Array(evt.target.result);
+  console.log('========== IMPORT START ==========');
+  console.log('File:', file.name);
 
-    let workbook;
+  const reader = new FileReader();
 
+  reader.onload = (evt) => {
     try {
-      workbook = XLSX.read(data, {
-        type: 'array'
-      });
-    } catch (xlsxError) {
-      console.error('XLSX READ FAILED');
-      console.error(xlsxError);
+      const bstr = evt.target.result;
 
-      try {
-        const buffer = evt.target.result;
+      console.log('Reading workbook...');
 
-        workbook = XLSX.read(buffer, {
-          type: 'buffer'
-        });
-
-        console.log(
-          'Workbook carregado usando fallback BUFFER'
-        );
-      } catch (fallbackError) {
-        console.error(
-          'BUFFER FALLBACK FAILED'
-        );
-
-        console.error(fallbackError);
-
-        alert(
-          'Não foi possível abrir este arquivo.\n\n' +
-          'Possíveis causas:\n' +
-          '- arquivo corrompido\n' +
-          '- arquivo XLS renomeado para XLSX\n' +
-          '- arquivo exportado incorretamente\n\n' +
-          'Abra o arquivo no Excel e salve novamente como:\n' +
-          '"Pasta de Trabalho do Excel (*.xlsx)"'
-        );
-
-        return;
-      }
-    }
-
-    console.log('Workbook:', workbook);
-
-    if (
-      !workbook ||
-      !workbook.SheetNames ||
-      workbook.SheetNames.length === 0
-    ) {
-      throw new Error(
-        'Nenhuma planilha encontrada'
-      );
-    }
-
-    const sheetName =
-      workbook.SheetNames[0];
-
-    console.log(
-      'Primeira planilha:',
-      sheetName
-    );
-
-    const sheet =
-      workbook.Sheets[sheetName];
-
-    if (!sheet) {
-      throw new Error(
-        'Planilha inválida'
-      );
-    }
-
-    const json =
-      XLSX.utils.sheet_to_json(sheet, {
-        defval: ''
+      const workbook = XLSX.read(bstr, {
+        type: 'binary'
       });
 
-    console.log(
-      'Linhas encontradas:',
-      json.length
-    );
+      console.log('Workbook loaded');
+      console.log(workbook);
 
-    if (!json.length) {
-      throw new Error(
-        'Arquivo sem registros'
+      const sheetName = workbook.SheetNames[0];
+
+      console.log('Sheet:', sheetName);
+
+      const sheet = workbook.Sheets[sheetName];
+
+      const json = XLSX.utils.sheet_to_json(sheet);
+
+      console.log('Rows found:', json.length);
+      console.log('First row:', json[0]);
+
+      const BRAZIL_CITIES = {
+        'SAO PAULO': { lat: -23.5505, lng: -46.6333, state: 'SP' },
+        'RIO DE JANEIRO': { lat: -22.9068, lng: -43.1729, state: 'RJ' },
+        'CURITIBA': { lat: -25.4284, lng: -49.2733, state: 'PR' },
+        'BLUMENAU': { lat: -26.9194, lng: -49.0661, state: 'SC' },
+        'BELO HORIZONTE': { lat: -19.9167, lng: -43.9345, state: 'MG' },
+        'PORTO ALEGRE': { lat: -30.0346, lng: -51.2177, state: 'RS' },
+        'GOIANIA': { lat: -16.6869, lng: -49.2648, state: 'GO' },
+        'SALVADOR': { lat: -12.9714, lng: -38.5014, state: 'BA' },
+        'FORTALEZA': { lat: -3.7319, lng: -38.5267, state: 'CE' },
+        'BRASILIA': { lat: -15.7939, lng: -47.8828, state: 'DF' },
+        'RECIFE': { lat: -8.0476, lng: -34.8770, state: 'PE' },
+        'BELEM': { lat: -1.4558, lng: -48.4902, state: 'PA' },
+        'MANAUS': { lat: -3.1190, lng: -60.0217, state: 'AM' },
+        'NATAL': { lat: -5.7945, lng: -35.2110, state: 'RN' },
+        'PIRACICABA': { lat: -22.7338, lng: -47.6476, state: 'SP' },
+        'PINHAIS': { lat: -25.4440, lng: -49.1921, state: 'PR' }
+      };
+
+      let geocodedCount = 0;
+      let droppedCount = 0;
+
+      const parsed = [];
+
+      json.forEach((row, idx) => {
+        try {
+          const name =
+            getField(row, ['Person Full Name']) ||
+            'Sem Nome';
+
+          const email =
+            getField(row, ['Person Work Email']);
+
+          const id =
+            getField(row, ['SESA Number']) ||
+            `ID-${idx}`;
+
+          const manager =
+            getField(row, ['Manager Full Name']);
+
+          const rawCity =
+            getField(row, ['City of Work']);
+
+          const vendedoresRaw =
+            getField(row, ['Vendedores']);
+
+          const cityKey = normalize(rawCity);
+
+          const cityMatch =
+            BRAZIL_CITIES[cityKey];
+
+          if (!cityMatch) {
+            console.warn(
+              `Cidade não encontrada: ${rawCity}`
+            );
+
+            droppedCount++;
+            return;
+          }
+
+          let categoria = 'Sem Categoria';
+          let categoria_foco = null;
+
+          if (
+            vendedoresRaw !== undefined &&
+            vendedoresRaw !== null &&
+            vendedoresRaw !== ''
+          ) {
+            const parts = String(
+              vendedoresRaw
+            ).split(' - ');
+
+            categoria =
+              parts[0]?.trim() ||
+              'Sem Categoria';
+
+            categoria_foco =
+              parts[1]?.trim() ||
+              null;
+          }
+
+          const catObj =
+            (CATEGORIES || []).find(
+              c =>
+                normalize(c.acronym) ===
+                normalize(categoria)
+            ) || {
+              acronym: categoria,
+              color: '#888888'
+            };
+
+          const person = {
+            id,
+            nNumber: id,
+
+            name,
+            email,
+
+            managerName: manager,
+
+            city: rawCity
+              ? toTitleCase(rawCity)
+              : 'Não Mapeada',
+
+            state: cityMatch.state,
+
+            coordinates: [
+              cityMatch.lat,
+              cityMatch.lng
+            ],
+
+            category: catObj,
+
+            subcategory:
+              categoria_foco,
+
+            geocoded: true
+          };
+
+          parsed.push(person);
+
+          geocodedCount++;
+
+          console.log(
+            `Row ${idx + 2} OK`,
+            person
+          );
+        } catch (rowError) {
+          console.error(
+            '================================='
+          );
+
+          console.error(
+            `ERROR PROCESSING ROW ${idx + 2}`
+          );
+
+          console.error(row);
+
+          console.error(
+            rowError?.message
+          );
+
+          console.error(
+            rowError?.stack
+          );
+
+          console.error(rowError);
+        }
+      });
+
+      console.log('========== IMPORT FINISHED ==========');
+      console.log('Imported:', parsed.length);
+      console.log('Geocoded:', geocodedCount);
+      console.log('Dropped:', droppedCount);
+
+      onDataLoaded(parsed);
+
+      alert(
+        `Importação concluída.\n\n` +
+        `Importados: ${parsed.length}\n` +
+        `Geocodificados: ${geocodedCount}\n` +
+        `Descartados: ${droppedCount}\n\n` +
+        `Veja o Console (F12) para detalhes.`
+      );
+    } catch (err) {
+      console.error(
+        '================================='
+      );
+
+      console.error(
+        'ERRO GERAL DA IMPORTAÇÃO'
+      );
+
+      console.error(
+        'Mensagem:',
+        err?.message
+      );
+
+      console.error(
+        'Stack:',
+        err?.stack
+      );
+
+      console.error(err);
+
+      alert(
+        `Erro ao ler Excel.\n\n` +
+        `Mensagem:\n${err?.message}\n\n` +
+        `Abra o Console (F12) para ver o stack completo.`
       );
     }
+  };
 
-    console.log(
-      'Primeira linha:',
-      json[0]
-    );
-
-    // daqui para baixo permanece seu código atual
-    // const parsed = ...
-  } catch (err) {
+  reader.onerror = (error) => {
     console.error(
-      '=============================='
+      'FILE READER ERROR'
     );
 
-    console.error(
-      'ERRO GERAL DA IMPORTAÇÃO'
-    );
-
-    console.error(
-      'Mensagem:',
-      err?.message
-    );
-
-    console.error(
-      'Stack:',
-      err?.stack
-    );
-
-    console.error(err);
+    console.error(error);
 
     alert(
-      `Erro ao importar.\n\n${err?.message}`
+      'Erro ao carregar arquivo.'
     );
-  }
+  };
+
+  reader.readAsBinaryString(file);
 };
   return (
     <div
