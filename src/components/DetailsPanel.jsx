@@ -1,12 +1,9 @@
 import React, { useState, useMemo } from 'react';
 
-export default function DetailsPanel({ mode, group, groupPeople, person, onClose, onPersonSelect }) {
+export default function DetailsPanel({ mode, group, groupPeople, person, personOpportunities, onClose, onPersonSelect }) {
   const [listSearch, setListSearch] = useState('');
+  const [showOpps, setShowOpps] = useState(false);
 
-  // IMPORTANTE: hooks sempre no topo, nunca depois de um return condicional.
-  // Antes, useMemo era chamado só quando mode === 'list', e não quando
-  // mode === 'detail' ou 'closed'. Isso muda o número de hooks entre renders
-  // e faz o React quebrar (tela branca) ao alternar entre os modos.
   const filteredPeople = useMemo(() => {
     const q = listSearch.toLowerCase();
     const base = groupPeople || [];
@@ -22,13 +19,10 @@ export default function DetailsPanel({ mode, group, groupPeople, person, onClose
     return filteredPeople.reduce((acc, p) => {
       let sectionName;
       if (group?.type === 'full-state') {
-        // Full state: group by city
         sectionName = p.city || 'Sem Cidade';
       } else if (group?.type === 'city') {
-        // City bubble: group by category
         sectionName = p.category?.acronym || 'Sem Categoria';
       } else {
-        // State category bubble: group by city
         sectionName = p.city || 'Sem Cidade';
       }
       if (!acc[sectionName]) acc[sectionName] = [];
@@ -39,11 +33,10 @@ export default function DetailsPanel({ mode, group, groupPeople, person, onClose
 
   if (mode === 'closed') return null;
 
-  // RENDERIZAÇÃO DO CARD DO PERFIL COMPLETO NO MEIO DA TELA
   if (mode === 'detail' && person) {
     return (
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '20px' }}>
-        <div style={{ background: '#fff', width: '100%', maxWidth: '440px', borderRadius: '16px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)', overflow: 'hidden', fontFamily: 'sans-serif', animation: 'scaleUp 0.2s ease-out' }}>
+      <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '20px' }}>
+        <div style={{ background: '#fff', width: '100%', maxWidth: '440px', maxHeight: '90vh', overflowY: 'auto', borderRadius: '16px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)', fontFamily: 'sans-serif', animation: 'scaleUp 0.2s ease-out' }}>
 
           <div style={{ background: person.category?.color || '#888888', padding: '24px', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(25,25,25,0.2)', border: 'none', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 'bold' }}>✕</button>
@@ -67,37 +60,53 @@ export default function DetailsPanel({ mode, group, groupPeople, person, onClose
             </div>
             <div style={{ display: 'flex', gap: '20px' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Categoria</label>
-                <span style={{ fontSize: '13px', background: `${person.category?.color}20`, color: person.category?.color, padding: '4px 8px', borderRadius: '6px', fontWeight: '600', display: 'inline-block', marginTop: '2px' }}>{person.category?.acronym || 'Sem Categoria'}</span>
+                <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Categorias</label>
+                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '2px' }}>
+                  {person.allCategories?.map((cat, i) => (
+                     <span key={i} style={{ fontSize: '12px', background: `${person.category?.color || '#888'}20`, color: person.category?.color || '#888', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>{cat}</span>
+                  ))}
+                </div>
               </div>
-              {person.subcategory && (
+              {person.subcategory && person.subcategory !== 'Sem Categoria' && (
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Subfoco</label>
                   <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500', display: 'inline-block', marginTop: '2px' }}>{person.subcategory}</span>
                 </div>
               )}
             </div>
-            {person.phone && (
-              <div>
-                <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Telefone</label>
-                <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500' }}>{person.phone}</span>
-              </div>
-            )}
             <div>
               <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Localidade de Trabalho</label>
               <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500' }}>{person.city || 'N/A'} — {person.state || 'UF'}</span>
             </div>
-            {person.street && (
-              <div>
-                <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Endereço</label>
-                <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500' }}>{person.street}</span>
+
+            {/* Secão de Oportunidades */}
+            {personOpportunities && personOpportunities.length > 0 && (
+              <div style={{ marginTop: '10px', borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h4 style={{ margin: 0, color: '#1e293b', fontSize: '15px' }}>Oportunidades ({personOpportunities.length})</h4>
+                  <button onClick={() => setShowOpps(!showOpps)} style={{ background: '#8b5cf6', color: '#fff', border: 'none', borderRadius: '4px', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    {showOpps ? 'Ocultar' : 'Ver Todas'}
+                  </button>
+                </div>
+                
+                {showOpps && (
+                  <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {personOpportunities.map(opp => (
+                      <div key={opp.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '12px' }}>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '13px', marginBottom: '4px' }}>{opp.name}</div>
+                        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '2px' }}>📍 {opp.street || opp.city}</div>
+                        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '2px' }}>🏷️ Seg: {opp.segment} / {opp.subSegment}</div>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>📊 Níveis: {opp.class1} / {opp.class2}</div>
+                        {opp.addInfo && (
+                          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px', fontStyle: 'italic' }}>Info: {opp.addInfo}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
-            {!person.geocoded && (
-              <div style={{ fontSize: '11px', color: '#b45309', background: '#fffbeb', padding: '8px 10px', borderRadius: '6px', border: '1px solid #fde68a' }}>
-                ⚠ Localização aproximada (cidade não encontrada na base de geocodificação — posição usa o centro do estado).
-              </div>
-            )}
+
           </div>
         </div>
       </div>
@@ -136,7 +145,6 @@ export default function DetailsPanel({ mode, group, groupPeople, person, onClose
           />
 
           {Object.entries(groupedBySection).sort().map(([sectionName, sectionPeople]) => {
-            // For full-state: show city > category subcategory
             const subGroups = group.type === 'full-state'
               ? sectionPeople.reduce((acc, p) => {
                   const cat = p.category?.acronym || 'Sem Categoria';

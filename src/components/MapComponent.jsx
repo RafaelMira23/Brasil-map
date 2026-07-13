@@ -13,15 +13,6 @@ const STATE_NAMES = {
   SC: 'Santa Catarina', SE: 'Sergipe', SP: 'São Paulo', TO: 'Tocantins'
 };
 
-const createPersonIcon = (color, size = 10) => {
-  return L.divIcon({
-    html: `<div style="background:${color};width:${size}px;height:${size}px;border-radius:50%;border:1.5px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.3);"></div>`,
-    className: '',
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-  });
-};
-
 const createCountBadge = (color, count, isDarkMode = false) => {
   const size = count > 99 ? 34 : count > 9 ? 28 : 22;
   const html = `<div style="background:${color};color:#fff;width:${size}px;height:${size}px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:${size * 0.4}px;font-weight:bold;box-shadow:0 3px 6px rgba(0,0,0,0.25);">${count}</div>`;
@@ -33,6 +24,15 @@ const createCountBadge = (color, count, isDarkMode = false) => {
   });
 };
 
+const createOppIcon = (color = '#8b5cf6') => {
+  return L.divIcon({
+    html: `<div style="background:${color};width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 10px ${color};"></div>`,
+    className: '',
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+};
+
 function ZoomController({ onZoomChange }) {
   const map = useMapEvents({
     zoomend: () => onZoomChange(map.getZoom())
@@ -40,27 +40,35 @@ function ZoomController({ onZoomChange }) {
   return null;
 }
 
-function ViewController({ selectedPerson, selectedGroup }) {
+function ViewController({ selectedPerson, selectedGroup, myOpps }) {
   const map = useMap();
   useEffect(() => {
-    if (selectedPerson && selectedPerson.coordinates) {
-      map.setView(selectedPerson.coordinates, 11, { animate: true });
+    if (selectedPerson) {
+      if (myOpps && myOpps.length > 0) {
+        // Se a pessoa tem oportunidades, foca para abranger ela e as oportunidades
+        const bounds = L.latLngBounds([selectedPerson.coordinates]);
+        myOpps.forEach(o => {
+          if (o.coordinates) bounds.extend(o.coordinates);
+        });
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14, animate: true });
+      } else if (selectedPerson.coordinates) {
+        map.setView(selectedPerson.coordinates, 12, { animate: true });
+      }
     }
-  }, [selectedPerson, map]);
+  }, [selectedPerson, myOpps, map]);
 
   useEffect(() => {
-    if (selectedGroup && selectedGroup.coordinates) {
+    if (selectedGroup && selectedGroup.coordinates && !selectedPerson) {
       const currentZoom = map.getZoom();
       const targetZoom = selectedGroup.type === 'state' ? 6 : 10;
       if (currentZoom < targetZoom) {
         map.setView(selectedGroup.coordinates, targetZoom, { animate: true });
       }
     }
-  }, [selectedGroup, map]);
+  }, [selectedGroup, selectedPerson, map]);
   return null;
 }
 
-// ClickOutsideHandler: deselects when clicking on map (outside any state polygon)
 function ClickOutsideHandler({ onClickOutside }) {
   useMapEvents({
     click: () => onClickOutside()
@@ -78,9 +86,9 @@ function BubbleLayer({ data, onGroupSelect, isDarkMode }) {
           {group.needsGuideLine && (
             <Polyline
               positions={[group.originalCoordinates, group.simulatedCoordinates]}
-              color={isDarkMode ? '#64748b' : '#94a3b8'}
-              weight={1}
-              opacity={0.5}
+              color={isDarkMode ? '#38bdf8' : '#94a3b8'}
+              weight={isDarkMode ? 1.5 : 1}
+              opacity={isDarkMode ? 0.8 : 0.5}
               dashArray="2, 4"
             />
           )}
@@ -105,8 +113,31 @@ function BubbleLayer({ data, onGroupSelect, isDarkMode }) {
   );
 }
 
-// Isolated GeoJSON layer — manages its own hover state to avoid
-// re-rendering parent and causing bubble flicker
+function OpportunitiesLayer({ myOpps }) {
+  if (!myOpps || myOpps.length === 0) return null;
+
+  return (
+    <>
+      {myOpps.map(opp => (
+        <Marker
+          key={opp.id}
+          position={opp.coordinates}
+          icon={createOppIcon('#8b5cf6')}
+          zIndexOffset={1000}
+        >
+          <Tooltip direction="top" offset={[0, -8]} opacity={1}>
+            <div style={{ fontWeight: 'bold', fontSize: '13px', color: '#1e293b' }}>
+              {opp.name}
+            </div>
+            <div style={{ fontSize: '11px', color: '#64748b' }}>Segmento: {opp.segment}</div>
+            <div style={{ fontSize: '11px', color: '#64748b' }}>{opp.street || opp.city}</div>
+          </Tooltip>
+        </Marker>
+      ))}
+    </>
+  );
+}
+
 function StateGeoJSONLayer({ geojsonData, clickedState, onStateClick, onClickOutside }) {
   const layersRef = useRef({});
   const hoveredRef = useRef(null);
@@ -141,9 +172,8 @@ function StateGeoJSONLayer({ geojsonData, clickedState, onStateClick, onClickOut
     } else {
       layer.setStyle(defaultStyle);
     }
-  }, [clickedState]); // eslint-disable-line
+  }, [clickedState]);
 
-  // Re-apply styles when clickedState changes
   useEffect(() => {
     Object.keys(layersRef.current).forEach(sigla => applyStyle(sigla));
   }, [clickedState, applyStyle]);
@@ -166,7 +196,7 @@ function StateGeoJSONLayer({ geojsonData, clickedState, onStateClick, onClickOut
         onStateClick(sigla, feature.properties.name || sigla);
       }
     });
-  }, []); // eslint-disable-line — we use refs for mutable state inside handlers
+  }, []);
 
   if (!geojsonData) return null;
 
@@ -180,14 +210,14 @@ function StateGeoJSONLayer({ geojsonData, clickedState, onStateClick, onClickOut
   );
 }
 
-export default function MapComponent({ data, selectedPerson, selectedGroup, onPersonSelect, onGroupSelect, onStateSelect, onStateDeselect, isDarkMode, STATE_CENTERS }) {
+export default function MapComponent({ data, oppData, selectedPerson, selectedGroup, onPersonSelect, onGroupSelect, onStateSelect, onStateDeselect, isDarkMode, STATE_CENTERS }) {
   const [geojsonData, setGeojsonData] = useState(null);
   const [geojsonError, setGeojsonError] = useState(false);
   const [clickedState, setClickedState] = useState(null);
   const [currentZoom, setCurrentZoom] = useState(4);
 
   const minZoomLevel = 4;
-  const maxZoomLevel = 12;
+  const maxZoomLevel = 14;
   const brazilBounds = [[-34.5, -74.0], [5.0, -34.0]];
   const brandColor = isDarkMode ? '#00C84B' : '#00A950';
 
@@ -208,7 +238,6 @@ export default function MapComponent({ data, selectedPerson, selectedGroup, onPe
     setClickedState(prev => {
       const next = prev === sigla ? null : sigla;
       if (next === null) {
-        // Deselecting — close sidebar
         if (onStateDeselect) onStateDeselect();
       } else {
         if (onStateSelect) onStateSelect(next, name);
@@ -224,7 +253,6 @@ export default function MapComponent({ data, selectedPerson, selectedGroup, onPe
     }
   }, [clickedState, onStateDeselect]);
 
-  // Bubbles only depend on clickedState (NOT hoveredState) → no flicker on hover
   const stateLayerData = useMemo(() => {
     if (currentZoom > 5 || !clickedState) return [];
     const groups = {};
@@ -273,6 +301,12 @@ export default function MapComponent({ data, selectedPerson, selectedGroup, onPe
     return Object.values(groups);
   }, [data, clickedState, currentZoom, brandColor]);
 
+  // Opportunities vinculadas à pessoa selecionada (que tenham coordenadas válidas)
+  const myOpps = useMemo(() => {
+    if (!selectedPerson || !oppData) return [];
+    return oppData.filter(o => o.owner === selectedPerson.name && o.coordinates);
+  }, [selectedPerson, oppData]);
+
   return (
     <div className="map-wrapper" style={{ background: isDarkMode ? '#0f172a' : '#cbd5e1', height: '100%', width: '100%', position: 'relative' }}>
       <MapContainer
@@ -286,12 +320,14 @@ export default function MapComponent({ data, selectedPerson, selectedGroup, onPe
         zoomControl={false}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          opacity={isDarkMode ? 0.6 : 1}
+          url={isDarkMode 
+            ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          opacity={1}
         />
         <ZoomController onZoomChange={setCurrentZoom} />
-        <ViewController selectedPerson={selectedPerson} selectedGroup={selectedGroup} />
+        <ViewController selectedPerson={selectedPerson} selectedGroup={selectedGroup} myOpps={myOpps} />
         <ClickOutsideHandler onClickOutside={handleClickOutside} />
 
         {!geojsonError && (
@@ -303,18 +339,21 @@ export default function MapComponent({ data, selectedPerson, selectedGroup, onPe
           />
         )}
 
-        {/* BUBBLES — only render when a state is selected */}
+        {/* Pinos e Bolhas de Pessoas */}
         {currentZoom <= 5 && stateLayerData.length > 0 && (
           <BubbleLayer data={stateLayerData} onGroupSelect={onGroupSelect} isDarkMode={isDarkMode} />
         )}
         {currentZoom >= 6 && cityClusters.length > 0 && (
           <BubbleLayer data={cityClusters} onGroupSelect={onGroupSelect} isDarkMode={isDarkMode} />
         )}
+
+        {/* Pinos de Oportunidades da Pessoa */}
+        <OpportunitiesLayer myOpps={myOpps} />
       </MapContainer>
 
       {geojsonError && (
         <div style={{ position: 'absolute', top: 90, left: '50%', transform: 'translateX(-50%)', background: '#fee2e2', color: '#991b1b', padding: '8px 14px', borderRadius: 8, fontSize: 12, zIndex: 1000, maxWidth: '90%', textAlign: 'center' }}>
-          Não foi possível carregar <code>public/brazil-states.geojson</code>. Sem esse arquivo não há bordas nem "mapa" visível, só o fundo colorido — confira se ele existe nesse caminho no projeto.
+          Não foi possível carregar <code>public/brazil-states.geojson</code>. Sem esse arquivo não há bordas nem "mapa" visível, só o fundo colorido.
         </div>
       )}
 

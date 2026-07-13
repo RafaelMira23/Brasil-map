@@ -19,19 +19,21 @@ const MoonIcon = () => (
   </svg>
 );
 
+const FilterIcon = () => (
+  <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ width: '18px', height: '18px' }}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+  </svg>
+);
+
 export default function Topbar({ 
   searchQuery, 
   setSearchQuery, 
   filteredData, 
   onPersonSelect,
-  statesList,
-  selectedState,
-  setSelectedState,
-  citiesList,
-  selectedCity,
-  setSelectedCity,
   isDarkMode,
-  toggleDarkMode
+  toggleDarkMode,
+  onOpenFilters,
+  activeFiltersCount
 }) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -44,7 +46,7 @@ export default function Topbar({
           <SearchIcon />
           <input 
             type="text" 
-            placeholder="Pesquisar por nome, número ou categoria..." 
+            placeholder="Pesquisar por nome ou número da pessoa..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -57,27 +59,25 @@ export default function Topbar({
         <div className="divider" />
 
         <div className="filters-container">
-          <select 
-            className="filter-select" 
-            value={selectedState} 
-            onChange={(e) => setSelectedState(e.target.value)}
+          <button
+            onClick={onOpenFilters}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              background: activeFiltersCount > 0 ? 'var(--accent-color)' : 'transparent',
+              color: activeFiltersCount > 0 ? '#fff' : 'var(--text-main)',
+              border: `1px solid ${activeFiltersCount > 0 ? 'var(--accent-color)' : 'var(--border-color)'}`,
+              padding: '8px 16px', borderRadius: '8px', cursor: 'pointer',
+              fontWeight: '600', fontSize: '13px', transition: 'all 0.2s'
+            }}
           >
-            <option value="">Qualquer Estado</option>
-            {statesList.map(state => (
-              <option key={state} value={state}>{state}</option>
-            ))}
-          </select>
-
-          <select 
-            className="filter-select" 
-            value={selectedCity} 
-            onChange={(e) => setSelectedCity(e.target.value)}
-          >
-            <option value="">Qualquer Cidade</option>
-            {citiesList.map(city => (
-              <option key={city} value={city}>{city}</option>
-            ))}
-          </select>
+            <FilterIcon />
+            Filtros Avançados
+            {activeFiltersCount > 0 && (
+              <span style={{ background: '#fff', color: 'var(--accent-color)', padding: '2px 6px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold' }}>
+                {activeFiltersCount}
+              </span>
+            )}
+          </button>
 
           <button 
             className="theme-toggle" 

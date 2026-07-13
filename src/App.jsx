@@ -3,15 +3,7 @@ import MapComponent from './components/MapComponent';
 import Topbar from './components/Topbar';
 import DetailsPanel from './components/DetailsPanel';
 import UploadScreen from './components/UploadScreen';
-
-const CATEGORIES = [
-  { acronym: 'MGT', color: '#ef4444' },
-  { acronym: 'TEC', color: '#3b82f6' },
-  { acronym: 'ADM', color: '#f59e0b' },
-  { acronym: 'OPS', color: '#10b981' },
-  { acronym: 'MKT', color: '#8b5cf6' },
-  { acronym: 'Sem Categoria', color: '#888888' }
-];
+import FilterPanel from './components/FilterPanel';
 
 const STATE_CENTERS = {
   'AC': [-9.02, -70.81], 'AL': [-9.57, -36.78], 'AM': [-3.47, -62.28], 'AP': [1.41, -51.77],
@@ -23,159 +15,135 @@ const STATE_CENTERS = {
   'SE': [-10.90, -37.07], 'SP': [-23.55, -46.64], 'TO': [-10.17, -48.33]
 };
 
-// Estados majoritariamente litorâneos: para esses, evitamos deslocar a
-// longitude para LESTE (positivo), que é a direção que empurra pontos
-// para dentro do oceano. O deslocamento é sempre puxado para OESTE (inland).
-const COASTAL_STATES = new Set(['AL','BA','CE','ES','MA','PA','PB','PE','PI','RJ','RN','RS','SC','SE','SP','AP']);
-
-// Banco de dados SINTÉTICO usado apenas pelo Gerador de Testes.
-// Os nomes aqui (ex: "Capital de SP") são fictícios — não correspondem a
-// cidades reais e não devem ser usados para geocodificar uploads de Excel
-// reais (ver UploadScreen.jsx, que faz geocodificação separada).
-const MOCK_GEODB = {};
-const ufs = Object.keys(STATE_CENTERS);
-const MOCK_CITIES_BY_STATE = {
-  'SP': ['São Paulo', 'Campinas', 'Santos', 'Ribeirão Preto'],
-  'RJ': ['Rio de Janeiro', 'Niterói', 'Petrópolis', 'Cabo Frio'],
-  'MG': ['Belo Horizonte', 'Uberlândia', 'Juiz de Fora'],
-  'BA': ['Salvador', 'Feira de Santana', 'Ilhéus'],
-  'RS': ['Porto Alegre', 'Caxias do Sul', 'Pelotas'],
-  'PR': ['Curitiba', 'Londrina', 'Maringá'],
-  'SC': ['Florianópolis', 'Joinville', 'Blumenau'],
-  'PE': ['Recife', 'Olinda', 'Caruaru'],
-  'CE': ['Fortaleza', 'Caucaia', 'Sobral'],
-  'PA': ['Belém', 'Ananindeua', 'Santarém'],
-  'MA': ['São Luís', 'Imperatriz', 'Caxias'],
-  'GO': ['Goiânia', 'Aparecida de Goiânia', 'Anápolis'],
-  'AM': ['Manaus', 'Parintins', 'Itacoatiara'],
-  'ES': ['Vitória', 'Vila Velha', 'Serra'],
-  'PB': ['João Pessoa', 'Campina Grande', 'Santa Rita'],
-  'RN': ['Natal', 'Mossoró', 'Parnamirim'],
-  'MT': ['Cuiabá', 'Várzea Grande', 'Rondonópolis'],
-  'AL': ['Maceió', 'Arapiraca', 'Rio Largo'],
-  'PI': ['Teresina', 'Parnaíba', 'Picos'],
-  'DF': ['Brasília'],
-  'MS': ['Campo Grande', 'Dourados', 'Três Lagoas'],
-  'SE': ['Aracaju', 'Nossa Senhora do Socorro', 'Lagarto'],
-  'RO': ['Porto Velho', 'Ji-Paraná', 'Ariquemes'],
-  'TO': ['Palmas', 'Araguaína', 'Gurupi'],
-  'AC': ['Rio Branco', 'Cruzeiro do Sul', 'Sena Madureira'],
-  'AP': ['Macapá', 'Santana', 'Laranjal do Jari'],
-  'RR': ['Boa Vista', 'Rorainópolis', 'Caracaraí']
-};
-
-
-const STATE_MAP = {
-  'Acre': 'AC', 'Alagoas': 'AL', 'Amazonas': 'AM', 'Amapá': 'AP', 'Bahia': 'BA', 'Ceará': 'CE',
-  'Distrito Federal': 'DF', 'Espírito Santo': 'ES', 'Goiás': 'GO', 'Maranhão': 'MA',
-  'Minas Gerais': 'MG', 'Mato Grosso do Sul': 'MS', 'Mato Grosso': 'MT', 'Pará': 'PA',
-  'Paraíba': 'PB', 'Pernambuco': 'PE', 'Piauí': 'PI', 'Paraná': 'PR', 'Rio de Janeiro': 'RJ',
-  'Rio Grande do Norte': 'RN', 'Rondônia': 'RO', 'Roraima': 'RR', 'Rio Grande do Sul': 'RS',
-  'Santa Catarina': 'SC', 'Sergipe': 'SE', 'São Paulo': 'SP', 'Tocantins': 'TO'
-};
-
-async function loadRealMockData() {
-  try {
-    const res = await fetch('/pessoas.json');
-    if (!res.ok) return [];
-    const pdata = await res.json();
-    return pdata.map(p => {
-      const randCat = CATEGORIES[Math.floor(Math.random() * (CATEGORIES.length - 1))]; // Avoid 'Sem Categoria' if possible, or include it
-      return {
-        id: p.id,
-        nNumber: p.id,
-        name: p.fullName,
-        email: p.email || `${p.firstName.toLowerCase()}@empresa.com`,
-        phone: '',
-        street: p.address?.street || '',
-        managerName: 'Gerente Teste',
-        city: p.address?.city,
-        state: STATE_MAP[p.address?.state] || p.address?.state,
-        coordinates: p.coordinates,
-        category: randCat,
-        subcategory: null,
-        geocoded: true
-      };
-    });
-  } catch(e) {
-    console.error(e);
-    return [];
-  }
-}
-
 function App() {
-  const [data, setData] = useState([]);
+  const [peopleData, setPeopleData] = useState([]);
+  const [oppData, setOppData] = useState([]);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [panelMode, setPanelMode] = useState('closed');
 
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
-  const statesList = useMemo(() => [...new Set(data.map(p => p.state).filter(Boolean))].sort(), [data]);
-  const citiesList = useMemo(() => {
-    if (!selectedState) return [];
-    return [...new Set(data.filter(p => p.state === selectedState).map(p => p.city).filter(Boolean))].sort();
-  }, [data, selectedState]);
+  // Filters state
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  
+  const [selectedStates, setSelectedStates] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  
+  const [selectedSegments, setSelectedSegments] = useState([]);
+  const [selectedSubSegments, setSelectedSubSegments] = useState([]);
+  const [selectedClass1, setSelectedClass1] = useState([]);
+  const [selectedClass2, setSelectedClass2] = useState([]);
+
+  // Extract options for filters
+  const statesList = useMemo(() => [...new Set(peopleData.map(p => p.state).filter(Boolean))].sort(), [peopleData]);
+  const citiesList = useMemo(() => [...new Set(peopleData.map(p => p.city).filter(Boolean))].sort(), [peopleData]);
+  const categoriesList = useMemo(() => {
+    const cats = new Set();
+    peopleData.forEach(p => p.allCategories?.forEach(c => cats.add(c)));
+    return [...cats].sort();
+  }, [peopleData]);
+
+  const segmentsList = useMemo(() => [...new Set(oppData.map(o => o.segment).filter(Boolean))].sort(), [oppData]);
+  const subSegmentsList = useMemo(() => [...new Set(oppData.map(o => o.subSegment).filter(Boolean))].sort(), [oppData]);
+  const class1List = useMemo(() => [...new Set(oppData.map(o => o.class1).filter(Boolean))].sort(), [oppData]);
+  const class2List = useMemo(() => [...new Set(oppData.map(o => o.class2).filter(Boolean))].sort(), [oppData]);
 
   const filteredData = useMemo(() => {
-    return data.filter(person => {
+    return peopleData.filter(person => {
       const nameMatch = person.name?.toLowerCase().includes(searchQuery.toLowerCase());
       const numMatch = person.id?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesSearch = nameMatch || numMatch;
-      const matchesState = selectedState ? person.state === selectedState : true;
-      const matchesCity = selectedCity ? person.city === selectedCity : true;
-      return matchesSearch && matchesState && matchesCity;
+
+      const matchesState = selectedStates.length === 0 || selectedStates.includes(person.state);
+      const matchesCity = selectedCities.length === 0 || selectedCities.includes(person.city);
+      const matchesCat = selectedCategories.length === 0 || 
+                         selectedCategories.some(cat => person.allCategories?.includes(cat));
+
+      return matchesSearch && matchesState && matchesCity && matchesCat;
     });
-  }, [data, searchQuery, selectedState, selectedCity]);
+  }, [peopleData, searchQuery, selectedStates, selectedCities, selectedCategories]);
 
   const groupPeople = useMemo(() => {
     if (!selectedGroup) return [];
     if (selectedGroup.type === 'full-state') {
-      // Entire state clicked on the map — show all people from that state
-      return data.filter(p => p.state === selectedGroup.state);
+      return filteredData.filter(p => p.state === selectedGroup.state);
     } else if (selectedGroup.type === 'state') {
-      return data
+      return filteredData
         .filter(p => p.state === selectedGroup.state)
         .filter(p => selectedGroup.acronym === 'GERAL' ? true : p.category?.acronym === selectedGroup.acronym);
     } else if (selectedGroup.type === 'city') {
-      return data
+      return filteredData
         .filter(p => p.city === selectedGroup.city && p.state === selectedGroup.state)
         .filter(p => selectedGroup.acronym ? p.category?.acronym === selectedGroup.acronym : true);
     }
     return [];
-  }, [data, selectedGroup]);
+  }, [filteredData, selectedGroup]);
 
-  if (data.length === 0) {
+  const filteredOppData = useMemo(() => {
+    return oppData.filter(opp => {
+      const matchSeg = selectedSegments.length === 0 || selectedSegments.includes(opp.segment);
+      const matchSubSeg = selectedSubSegments.length === 0 || selectedSubSegments.includes(opp.subSegment);
+      const matchC1 = selectedClass1.length === 0 || selectedClass1.includes(opp.class1);
+      const matchC2 = selectedClass2.length === 0 || selectedClass2.includes(opp.class2);
+      
+      return matchSeg && matchSubSeg && matchC1 && matchC2;
+    });
+  }, [oppData, selectedSegments, selectedSubSegments, selectedClass1, selectedClass2]);
+
+
+  if (peopleData.length === 0) {
     return (
       <UploadScreen
-        CATEGORIES={CATEGORIES}
-        GEODB={{}}
         STATE_CENTERS={STATE_CENTERS}
-        onDataLoaded={(parsed) => setData(parsed)}
-        onTriggerMock={async () => {
-          const mockData = await loadRealMockData();
-          setData(mockData);
+        onDataLoaded={({ people, opportunities }) => {
+          setPeopleData(people);
+          setOppData(opportunities);
         }}
       />
     );
   }
+
+  const activeFiltersCount = selectedStates.length + selectedCities.length + selectedCategories.length + selectedSegments.length + selectedSubSegments.length + selectedClass1.length + selectedClass2.length;
 
   return (
     <div className={`app-container ${isDarkMode ? 'dark' : ''}`}>
       <Topbar
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         filteredData={filteredData} onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
-        statesList={statesList} selectedState={selectedState} setSelectedState={(val) => { setSelectedState(val); setSelectedCity(''); }}
-        citiesList={citiesList} selectedCity={selectedCity} setSelectedCity={setSelectedCity}
         isDarkMode={isDarkMode} toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+        onOpenFilters={() => setIsFilterPanelOpen(true)}
+        activeFiltersCount={activeFiltersCount}
+      />
+
+      <FilterPanel 
+        isOpen={isFilterPanelOpen}
+        onClose={() => setIsFilterPanelOpen(false)}
+        isDarkMode={isDarkMode}
+        statesList={statesList}
+        selectedStates={selectedStates} setSelectedStates={setSelectedStates}
+        citiesList={citiesList}
+        selectedCities={selectedCities} setSelectedCities={setSelectedCities}
+        categoriesList={categoriesList}
+        selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}
+        segmentsList={segmentsList}
+        selectedSegments={selectedSegments} setSelectedSegments={setSelectedSegments}
+        subSegmentsList={subSegmentsList}
+        selectedSubSegments={selectedSubSegments} setSelectedSubSegments={setSelectedSubSegments}
+        class1List={class1List}
+        selectedClass1={selectedClass1} setSelectedClass1={setSelectedClass1}
+        class2List={class2List}
+        selectedClass2={selectedClass2} setSelectedClass2={setSelectedClass2}
       />
 
       <MapComponent
         data={filteredData}
-        selectedPerson={selectedPerson} selectedGroup={selectedGroup}
+        oppData={filteredOppData}
+        selectedPerson={selectedPerson} 
+        selectedGroup={selectedGroup}
         onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
         onGroupSelect={(g) => { setSelectedGroup(g); setPanelMode('list'); }}
         onStateSelect={(sigla, name) => {
@@ -195,11 +163,12 @@ function App() {
         group={selectedGroup}
         groupPeople={groupPeople}
         person={selectedPerson}
+        personOpportunities={oppData.filter(o => o.owner === selectedPerson?.name)}
         onClose={() => { setPanelMode('closed'); setSelectedPerson(null); setSelectedGroup(null); }}
         onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
       />
 
-      <button onClick={() => { setData([]); setPanelMode('closed'); }} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 999, padding: '10px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+      <button onClick={() => { setPeopleData([]); setOppData([]); setPanelMode('closed'); }} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 999, padding: '10px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
         Resetar Base (Upload)
       </button>
     </div>
