@@ -15,6 +15,7 @@
   --cluster-border: #ffffff;
   --cluster-text: #ffffff;
   
+  --accent-color: #00A950;
   --map-bg: #e2e8f0;
   --state-border: rgba(0, 169, 80, 0.5);
 }
@@ -29,6 +30,7 @@
   --text-main: #f1f5f9;
   --text-muted: #94a3b8;
   --border-color: #334155;
+  --accent-color: #00C84B;
   
   --cluster-bg: rgba(0, 200, 75, 0.9);
   --cluster-border: #1e293b;

@@ -5,6 +5,10 @@ import DetailsPanel from './components/DetailsPanel';
 import UploadScreen from './components/UploadScreen';
 import FilterPanel from './components/FilterPanel';
 
+function normalizeCompact(str) {
+  return (str || '').toString().trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '');
+}
+
 const STATE_CENTERS = {
   'AC': [-9.02, -70.81], 'AL': [-9.57, -36.78], 'AM': [-3.47, -62.28], 'AP': [1.41, -51.77],
   'BA': [-12.96, -38.51], 'CE': [-5.20, -39.53], 'DF': [-15.78, -47.93], 'ES': [-19.19, -40.34],
@@ -24,7 +28,7 @@ function App() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [panelMode, setPanelMode] = useState('closed');
 
-  const [isDarkMode, setIsDarkMode] = useState(false); // Default Claro
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Filters state
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
@@ -38,7 +42,7 @@ function App() {
   const [selectedClass1, setSelectedClass1] = useState([]);
   const [selectedClass2, setSelectedClass2] = useState([]);
 
-  // Extract options for filters
+  // Extract options for filters (exclude End User from class lists)
   const statesList = useMemo(() => [...new Set(peopleData.map(p => p.state).filter(Boolean))].sort(), [peopleData]);
   const citiesList = useMemo(() => [...new Set(peopleData.map(p => p.city).filter(Boolean))].sort(), [peopleData]);
   const categoriesList = useMemo(() => {
@@ -47,31 +51,39 @@ function App() {
     return [...cats].sort();
   }, [peopleData]);
 
-  const segmentsList = useMemo(() => [...new Set(oppData.map(o => o.segment).filter(Boolean))].sort(), [oppData]);
-  const subSegmentsList = useMemo(() => [...new Set(oppData.map(o => o.subSegment).filter(Boolean))].sort(), [oppData]);
-  const class1List = useMemo(() => [...new Set(oppData.map(o => o.class1).filter(Boolean))].sort(), [oppData]);
-  const class2List = useMemo(() => [...new Set(oppData.map(o => o.class2).filter(Boolean))].sort(), [oppData]);
+  const visibleOpps = useMemo(() => oppData.filter(o => !o.isEndUser), [oppData]);
+  const segmentsList = useMemo(() => [...new Set(visibleOpps.map(o => o.segment).filter(Boolean))].sort(), [visibleOpps]);
+  const subSegmentsList = useMemo(() => [...new Set(visibleOpps.map(o => o.subSegment).filter(Boolean))].sort(), [visibleOpps]);
+  const class1List = useMemo(() => [...new Set(visibleOpps.map(o => o.class1).filter(Boolean))].sort(), [visibleOpps]);
+  const class2List = useMemo(() => [...new Set(visibleOpps.map(o => o.class2).filter(Boolean))].sort(), [visibleOpps]);
 
   const filteredData = useMemo(() => {
     return peopleData.filter(person => {
       const q = searchQuery.toLowerCase();
-      const nameMatch = person.name?.toLowerCase().includes(q);
-      const numMatch = person.id?.toLowerCase().includes(q);
-      
-      // Checar se ele é dono de alguma conta que dê match
-      const opps = oppData.filter(o => o.ownerNormalized === person.nameNormalized);
-      const oppMatch = opps.some(o => o.name?.toLowerCase().includes(q));
-
-      const matchesSearch = nameMatch || numMatch || oppMatch;
+      if (q) {
+        const nameMatch = person.name?.toLowerCase().includes(q);
+        const numMatch = person.id?.toLowerCase().includes(q);
+        // Check if any of their accounts match the search
+        const personOpps = visibleOpps.filter(o => o.ownerNormalized === person.nameNormalized);
+        const oppMatch = personOpps.some(o => o.name?.toLowerCase().includes(q));
+        if (!nameMatch && !numMatch && !oppMatch) return false;
+      }
 
       const matchesState = selectedStates.length === 0 || selectedStates.includes(person.state);
       const matchesCity = selectedCities.length === 0 || selectedCities.includes(person.city);
       const matchesCat = selectedCategories.length === 0 || 
                          selectedCategories.some(cat => person.allCategories?.includes(cat));
 
-      return matchesSearch && matchesState && matchesCity && matchesCat;
+      return matchesState && matchesCity && matchesCat;
     });
-  }, [peopleData, oppData, searchQuery, selectedStates, selectedCities, selectedCategories]);
+  }, [peopleData, visibleOpps, searchQuery, selectedStates, selectedCities, selectedCategories]);
+
+  // Search results for accounts (shown separately in Topbar)
+  const searchedAccounts = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    if (!q || q.length < 2) return [];
+    return visibleOpps.filter(o => o.name?.toLowerCase().includes(q)).slice(0, 10);
+  }, [visibleOpps, searchQuery]);
 
   const groupPeople = useMemo(() => {
     if (!selectedGroup) return [];
@@ -80,26 +92,30 @@ function App() {
     } else if (selectedGroup.type === 'state') {
       return filteredData
         .filter(p => p.state === selectedGroup.state)
-        .filter(p => selectedGroup.acronym === 'GERAL' ? true : p.category?.acronym === selectedGroup.acronym);
+        .filter(p => selectedGroup.acronym === 'GERAL' ? true : p.allCategories?.includes(selectedGroup.acronym));
     } else if (selectedGroup.type === 'city') {
       return filteredData
         .filter(p => p.city === selectedGroup.city && p.state === selectedGroup.state)
-        .filter(p => selectedGroup.acronym ? p.category?.acronym === selectedGroup.acronym : true);
+        .filter(p => selectedGroup.acronym ? p.allCategories?.includes(selectedGroup.acronym) : true);
     }
     return [];
   }, [filteredData, selectedGroup]);
 
   const filteredOppData = useMemo(() => {
-    return oppData.filter(opp => {
+    return visibleOpps.filter(opp => {
       const matchSeg = selectedSegments.length === 0 || selectedSegments.includes(opp.segment);
       const matchSubSeg = selectedSubSegments.length === 0 || selectedSubSegments.includes(opp.subSegment);
       const matchC1 = selectedClass1.length === 0 || selectedClass1.includes(opp.class1);
       const matchC2 = selectedClass2.length === 0 || selectedClass2.includes(opp.class2);
-      
       return matchSeg && matchSubSeg && matchC1 && matchC2;
     });
-  }, [oppData, selectedSegments, selectedSubSegments, selectedClass1, selectedClass2]);
+  }, [visibleOpps, selectedSegments, selectedSubSegments, selectedClass1, selectedClass2]);
 
+  // Get accounts for a specific person
+  const getPersonAccounts = (person) => {
+    if (!person) return [];
+    return filteredOppData.filter(o => o.ownerNormalized === person.nameNormalized);
+  };
 
   if (peopleData.length === 0) {
     return (
@@ -115,11 +131,28 @@ function App() {
 
   const activeFiltersCount = selectedStates.length + selectedCities.length + selectedCategories.length + selectedSegments.length + selectedSubSegments.length + selectedClass1.length + selectedClass2.length;
 
+  const handleSelectPerson = (p) => {
+    setSelectedPerson(p);
+    setPanelMode('detail');
+  };
+
+  // When user clicks an account in Topbar search, find the owner person and select them
+  const handleSelectAccount = (account) => {
+    const ownerPerson = peopleData.find(p => p.nameNormalized === account.ownerNormalized);
+    if (ownerPerson) {
+      setSelectedPerson(ownerPerson);
+      setPanelMode('detail');
+    }
+  };
+
   return (
     <div className={`app-container ${isDarkMode ? 'dark' : ''}`}>
       <Topbar
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        filteredData={filteredData} onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
+        filteredData={filteredData}
+        searchedAccounts={searchedAccounts}
+        onPersonSelect={handleSelectPerson}
+        onAccountSelect={handleSelectAccount}
         isDarkMode={isDarkMode} toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
         onOpenFilters={() => setIsFilterPanelOpen(true)}
         activeFiltersCount={activeFiltersCount}
@@ -150,7 +183,7 @@ function App() {
         oppData={filteredOppData}
         selectedPerson={selectedPerson} 
         selectedGroup={selectedGroup}
-        onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
+        onPersonSelect={handleSelectPerson}
         onGroupSelect={(g) => { setSelectedGroup(g); setPanelMode('list'); }}
         onStateSelect={(sigla, name) => {
           setSelectedGroup({ type: 'full-state', state: sigla, name, acronym: 'GERAL' });
@@ -169,12 +202,12 @@ function App() {
         group={selectedGroup}
         groupPeople={groupPeople}
         person={selectedPerson}
-        personOpportunities={oppData.filter(o => o.ownerNormalized === selectedPerson?.nameNormalized)}
+        personOpportunities={getPersonAccounts(selectedPerson)}
         onClose={() => { setPanelMode('closed'); setSelectedPerson(null); setSelectedGroup(null); }}
-        onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
+        onPersonSelect={handleSelectPerson}
       />
 
-      <button onClick={() => { setPeopleData([]); setOppData([]); setPanelMode('closed'); }} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 999, padding: '10px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+      <button onClick={() => { setPeopleData([]); setOppData([]); setPanelMode('closed'); setSelectedPerson(null); setSelectedGroup(null); }} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 999, padding: '10px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
         Resetar Base
       </button>
     </div>
