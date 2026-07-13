@@ -57,23 +57,11 @@ function stringToColor(str) {
   return `hsl(${h}, 70%, 50%)`;
 }
 
-const geocodeCache = {};
-async function geocodeAddress(addressStr) {
-  if (geocodeCache[addressStr]) return geocodeCache[addressStr];
-  try {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressStr)}&limit=1`;
-    const response = await fetch(url);
-    if (!response.ok) return null;
-    const data = await response.json();
-    if (data && data.length > 0) {
-      const result = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
-      geocodeCache[addressStr] = result;
-      return result;
-    }
-  } catch (err) {
-    // Silencia erros de fetch para não travar o console se a API bloquear
-  }
-  return null;
+function applyJitter([lat, lng]) {
+  // Dispersão aleatória de até ~1-2km para que pinos na mesma cidade não se sobreponham
+  const jLat = (Math.random() - 0.5) * 0.03;
+  const jLng = (Math.random() - 0.5) * 0.03;
+  return [lat + jLat, lng + jLng];
 }
 
 export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
@@ -88,10 +76,10 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
       reader.onload = (e) => {
         try {
           const data = new Uint8Array(e.target.result);
-          // Adicionado params pra evitar alguns erros de parse do XLSX
-          const workbook = XLSX.read(data, { type: 'array', cellDates: true, cellNF: false, cellText: false });
+          // Opções mínimas para evitar "Bad uncompressed size" e pular erros de formatação complexa do Excel
+          const workbook = XLSX.read(data, { type: 'array', cellDates: false, cellStyles: false, cellNF: false, cellText: false });
           const sheetName = workbook.SheetNames[0];
-          const json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+          const json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' }); // defval garante que a linha não quebre
           resolve(json);
         } catch (err) {
           reject(err);
@@ -118,7 +106,9 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         const manager = getField(row, ['Manager Full Name']);
         const rawCity = getField(row, ['City of Work']);
         const catSec = getField(row, ['Categoria']) || 'Sem Categoria';
-        const deQue = getField(row, ['De quê']);
+        
+        // Pega De quê com ou sem interrogação
+        const deQue = getField(row, ['De quê?', 'De que?', 'De quê', 'De que']);
 
         const cityKey = normalize(rawCity);
         const cityMatch = BRAZIL_CITIES[cityKey];
@@ -133,7 +123,10 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           return; // Pula se não achou cidade
         }
 
-        const primaryCategories = deQue ? String(deQue).split(' - ').map(s => s.trim()) : ['Sem Categoria'];
+        // Separa por hífen com espaços " - " ou apenas "-"
+        const primaryCategories = deQue ? String(deQue).split(/-/).map(s => s.trim()).filter(Boolean) : [];
+        if (primaryCategories.length === 0) primaryCategories.push('Sem Categoria');
+
         const mainCatStr = primaryCategories[0];
         const categoryObj = {
           acronym: mainCatStr,
@@ -141,7 +134,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         };
 
         parsed.push({
-          id, nNumber: id, name, email, managerName: manager,
+          id, nNumber: id, name, nameNormalized: normalize(name), email, managerName: manager,
           city: rawCity ? toTitleCase(rawCity) : 'Não Mapeada',
           state, coordinates,
           category: categoryObj,
@@ -154,8 +147,8 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
       setPeopleData(parsed);
       alert(`${parsed.length} Pessoas importadas com sucesso!`);
     } catch (err) {
-      console.warn("Erro no XLSX:", err); // Avisar no console sem travar a tela com alerta se possível
-      alert('Erro ao carregar pessoas. Tente salvar a planilha como .xlsx novamente.');
+      console.warn("Erro no XLSX:", err);
+      alert('Erro ao carregar pessoas. Tente salvar a planilha como .xlsx novamente sem formatações complexas.');
     } finally {
       setLoading(false);
     }
@@ -165,12 +158,10 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
-    setLoadingText('Lendo Contas...');
+    setLoadingText('Mapeando Contas...');
     try {
       const json = await parseExcel(file);
       const parsed = [];
-      
-      let processedCount = 0;
 
       for (let i = 0; i < json.length; i++) {
         const row = json[i];
@@ -193,63 +184,43 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
 
         if (!accountName) continue;
         
-        // Se level 1 é End User, não mostra
-        if (class1 && class1.toUpperCase().includes('END USER')) {
+        // Se level 1 é End User, não mostra e não carrega
+        if (class1 && normalize(class1).includes('END USER')) {
           continue;
         }
 
-        let addressQuery = '';
-        if (street) addressQuery += `${street}, `;
-        if (city) addressQuery += `${city}, `;
-        if (state) addressQuery += `${state}, `;
-        if (country) addressQuery += `${country}`;
-        else addressQuery += 'Brasil';
-
         let coordinates = null;
-        let geocoded = false;
 
-        // Geocodificação super rápida (sem delay). A API pode rejeitar algumas, e está tudo bem.
-        if (addressQuery && street) {
-          if (processedCount % 10 === 0) {
-             setLoadingText(`Verificando Locais: ${city || '...'} (${i + 1}/${json.length})`);
-          }
-          const coords = await geocodeAddress(addressQuery);
-          if (coords) {
-            coordinates = [coords.lat, coords.lng];
-            geocoded = true;
-          }
+        // Fallback rápido usando cidade para evitar CORS e limitação da API
+        const cKey = normalize(city);
+        if (BRAZIL_CITIES[cKey]) {
+            coordinates = [BRAZIL_CITIES[cKey].lat, BRAZIL_CITIES[cKey].lng];
+        } else if (state && STATE_CENTERS[state.toUpperCase()]) {
+            coordinates = STATE_CENTERS[state.toUpperCase()];
+        } else {
+            // Se cair no fallback padrão do centro do Brasil
+            coordinates = [-14.235, -51.925];
         }
 
-        // Fallback rápido
-        if (!coordinates) {
-          const cKey = normalize(city);
-          if (BRAZIL_CITIES[cKey]) {
-             coordinates = [BRAZIL_CITIES[cKey].lat, BRAZIL_CITIES[cKey].lng];
-          } else if (state && STATE_CENTERS[state.toUpperCase()]) {
-             coordinates = STATE_CENTERS[state.toUpperCase()];
-          } else {
-             coordinates = [-14.235, -51.925];
-          }
-        }
+        // Adicionar dispersão para que não fiquem todas agrupadas numa pilha perfeita
+        const jitteredCoords = applyJitter(coordinates);
 
         parsed.push({
           id: accountId || `ACC-${i}`,
           name: accountName,
-          segment, subSegment, owner,
+          segment, subSegment, owner, ownerNormalized: normalize(owner),
           country, state, city: city || '', street, zip,
           profile, platform, class1, class2, addInfo,
-          coordinates,
-          geocoded
+          coordinates: jitteredCoords,
+          geocoded: false
         });
-        
-        processedCount++;
       }
 
       setOppData(parsed);
       alert(`${parsed.length} Contas importadas com sucesso!`);
     } catch (err) {
       console.warn("Erro no XLSX:", err);
-      alert('Erro ao carregar contas. Tente salvar a planilha como .xlsx novamente.');
+      alert('Erro ao carregar contas. Tente salvar a planilha como .xlsx novamente sem formatações complexas.');
     } finally {
       setLoading(false);
     }

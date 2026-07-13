@@ -71,7 +71,7 @@ export default function Topbar({
             }}
           >
             <FilterIcon />
-            Filtros Avançados
+            Filtros
             {activeFiltersCount > 0 && (
               <span style={{ background: '#fff', color: 'var(--accent-color)', padding: '2px 6px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold' }}>
                 {activeFiltersCount}

@@ -58,7 +58,8 @@ function App() {
       const nameMatch = person.name?.toLowerCase().includes(q);
       const numMatch = person.id?.toLowerCase().includes(q);
       
-      const opps = oppData.filter(o => o.owner === person.name);
+      // Checar se ele é dono de alguma conta que dê match
+      const opps = oppData.filter(o => o.ownerNormalized === person.nameNormalized);
       const oppMatch = opps.some(o => o.name?.toLowerCase().includes(q));
 
       const matchesSearch = nameMatch || numMatch || oppMatch;
@@ -168,7 +169,7 @@ function App() {
         group={selectedGroup}
         groupPeople={groupPeople}
         person={selectedPerson}
-        personOpportunities={oppData.filter(o => o.owner === selectedPerson?.name)}
+        personOpportunities={oppData.filter(o => o.ownerNormalized === selectedPerson?.nameNormalized)}
         onClose={() => { setPanelMode('closed'); setSelectedPerson(null); setSelectedGroup(null); }}
         onPersonSelect={(p) => { setSelectedPerson(p); setPanelMode('detail'); }}
       />

@@ -83,7 +83,7 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '4px' }}>Localidade de Trabalho</label>
               <span style={{ fontSize: '14px', color: 'var(--text-main)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                📍 {person.city || 'N/A'} — {person.state || 'UF'}
+                {person.city || 'N/A'} — {person.state || 'UF'}
               </span>
             </div>
           </div>
@@ -106,18 +106,18 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                          <span style={{ filter: 'grayscale(1)' }}>📍</span> {opp.street ? `${opp.street}, ${opp.city}` : opp.city}
+                          <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Local:</span> {opp.street ? `${opp.street}, ${opp.city}` : opp.city}
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                          <span style={{ filter: 'grayscale(1)' }}>🏷️</span> {opp.segment} {opp.subSegment ? `/ ${opp.subSegment}` : ''}
+                          <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Seg:</span> {opp.segment} {opp.subSegment ? `/ ${opp.subSegment}` : ''}
                         </div>
                         {(opp.class1 || opp.class2) && (
                           <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                            <span style={{ filter: 'grayscale(1)' }}>📊</span> {opp.class1} {opp.class2 ? `/ ${opp.class2}` : ''}
+                            <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Class:</span> {opp.class1} {opp.class2 ? `/ ${opp.class2}` : ''}
                           </div>
                         )}
                         {opp.addInfo && (
-                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', fontStyle: 'italic', paddingLeft: '22px' }}>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', fontStyle: 'italic', paddingLeft: '40px' }}>
                             Info: {opp.addInfo}
                           </div>
                         )}

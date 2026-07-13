@@ -81,7 +81,7 @@ export default function FilterPanel({
       boxShadow: '-10px 0 30px rgba(0,0,0,0.1)', fontFamily: 'sans-serif'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', borderBottom: '1px solid var(--border-color)' }}>
-        <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--text-main)' }}>Filtros Avançados</h2>
+        <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--text-main)' }}>Filtros</h2>
         <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', fontSize: '20px' }}>✕</button>
       </div>
 
