@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 
 export default function DetailsPanel({ mode, group, groupPeople, person, personOpportunities, onClose, onPersonSelect }) {
   const [listSearch, setListSearch] = useState('');
-  const [showOpps, setShowOpps] = useState(false);
+  const [showOpps, setShowOpps] = useState(true);
 
   const filteredPeople = useMemo(() => {
     const q = listSearch.toLowerCase();
@@ -35,79 +35,100 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
 
   if (mode === 'detail' && person) {
     return (
-      <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '20px' }}>
-        <div style={{ background: '#fff', width: '100%', maxWidth: '440px', maxHeight: '90vh', overflowY: 'auto', borderRadius: '16px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)', fontFamily: 'sans-serif', animation: 'scaleUp 0.2s ease-out' }}>
-
-          <div style={{ background: person.category?.color || '#888888', padding: '24px', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(25,25,25,0.2)', border: 'none', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 'bold' }}>✕</button>
-            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: 'bold', color: person.category?.color || '#888888', marginBottom: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-              {person.name?.charAt(0)?.toUpperCase() || '?'}
-            </div>
-            <h3 style={{ margin: 0, color: '#fff', fontSize: '18px', fontWeight: '700', textAlign: 'center' }}>{person.name}</h3>
-            <p style={{ margin: '4px 0 0 0', color: 'rgba(255,255,255,0.85)', fontSize: '12px' }}>{person.email || 'Email não informado'}</p>
+      <div style={{
+        position: 'fixed', top: 0, right: 0, bottom: 0, width: '420px',
+        background: 'var(--bg-main)', borderLeft: '1px solid var(--border-color)',
+        zIndex: 10000, display: 'flex', flexDirection: 'column',
+        boxShadow: '-10px 0 30px rgba(0,0,0,0.1)', fontFamily: 'sans-serif',
+        animation: 'slideInRight 0.3s ease-out'
+      }}>
+        <style>{`@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }`}</style>
+        
+        {/* Cabeçalho do Perfil */}
+        <div style={{ background: person.category?.color || '#888888', padding: '30px 20px', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+          <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(0,0,0,0.2)', border: 'none', color: '#fff', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', transition: 'background 0.2s' }}>✕</button>
+          
+          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', fontWeight: 'bold', color: person.category?.color || '#888888', marginBottom: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+            {person.name?.charAt(0)?.toUpperCase() || '?'}
           </div>
+          <h3 style={{ margin: 0, color: '#fff', fontSize: '20px', fontWeight: '800', textAlign: 'center', letterSpacing: '-0.02em' }}>{person.name}</h3>
+          <p style={{ margin: '6px 0 0 0', color: 'rgba(255,255,255,0.9)', fontSize: '13px', fontWeight: '500' }}>{person.email || 'Email não informado'}</p>
+        </div>
 
-          <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px', background: '#fff' }}>
+        {/* Corpo com Scroll */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* Informações Pessoais */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             {person.nNumber && !String(person.nNumber).startsWith('ID-') && (
               <div>
-                <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Identificador</label>
-                <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500' }}>{person.nNumber}</span>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '4px' }}>Identificador</label>
+                <span style={{ fontSize: '14px', color: 'var(--text-main)', fontWeight: '600' }}>{person.nNumber}</span>
               </div>
             )}
             <div>
-              <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Gestor Direto</label>
-              <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500' }}>{person.managerName || 'Não Informado'}</span>
+              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '4px' }}>Gestor Direto</label>
+              <span style={{ fontSize: '14px', color: 'var(--text-main)', fontWeight: '600' }}>{person.managerName || 'Não Informado'}</span>
             </div>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Categorias</label>
-                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '2px' }}>
-                  {person.allCategories?.map((cat, i) => (
-                     <span key={i} style={{ fontSize: '12px', background: `${person.category?.color || '#888'}20`, color: person.category?.color || '#888', padding: '2px 6px', borderRadius: '4px', fontWeight: '600' }}>{cat}</span>
-                  ))}
-                </div>
+            
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '8px' }}>Categorias</label>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {person.allCategories?.map((cat, i) => (
+                   <span key={i} style={{ fontSize: '12px', background: `${person.category?.color || '#888'}15`, color: person.category?.color || '#888', border: `1px solid ${person.category?.color || '#888'}40`, padding: '4px 10px', borderRadius: '20px', fontWeight: '700' }}>{cat}</span>
+                ))}
               </div>
-              {person.subcategory && person.subcategory !== 'Sem Categoria' && (
-                <div style={{ flex: 1 }}>
-                  <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Subfoco</label>
-                  <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500', display: 'inline-block', marginTop: '2px' }}>{person.subcategory}</span>
+            </div>
+
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '4px' }}>Localidade de Trabalho</label>
+              <span style={{ fontSize: '14px', color: 'var(--text-main)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                📍 {person.city || 'N/A'} — {person.state || 'UF'}
+              </span>
+            </div>
+          </div>
+
+          {/* Seção de Contas (Oportunidades) */}
+          {personOpportunities && personOpportunities.length > 0 && (
+            <div style={{ marginTop: '10px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h4 style={{ margin: 0, color: 'var(--text-main)', fontSize: '16px', fontWeight: '700' }}>Contas Responsáveis ({personOpportunities.length})</h4>
+                <button onClick={() => setShowOpps(!showOpps)} style={{ background: 'var(--bg-hover)', color: 'var(--text-main)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  {showOpps ? 'Ocultar' : 'Expandir'}
+                </button>
+              </div>
+              
+              {showOpps && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {personOpportunities.map(opp => (
+                    <div key={opp.id} style={{ background: 'var(--bg-hover)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '16px', transition: 'transform 0.2s', cursor: 'default' }}>
+                      <div style={{ fontWeight: '800', color: 'var(--text-main)', fontSize: '14px', marginBottom: '8px' }}>{opp.name}</div>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                          <span style={{ filter: 'grayscale(1)' }}>📍</span> {opp.street ? `${opp.street}, ${opp.city}` : opp.city}
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                          <span style={{ filter: 'grayscale(1)' }}>🏷️</span> {opp.segment} {opp.subSegment ? `/ ${opp.subSegment}` : ''}
+                        </div>
+                        {(opp.class1 || opp.class2) && (
+                          <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                            <span style={{ filter: 'grayscale(1)' }}>📊</span> {opp.class1} {opp.class2 ? `/ ${opp.class2}` : ''}
+                          </div>
+                        )}
+                        {opp.addInfo && (
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', fontStyle: 'italic', paddingLeft: '22px' }}>
+                            Info: {opp.addInfo}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600', letterSpacing: '0.05em' }}>Localidade de Trabalho</label>
-              <span style={{ fontSize: '14px', color: '#334155', fontWeight: '500' }}>{person.city || 'N/A'} — {person.state || 'UF'}</span>
-            </div>
+          )}
 
-            {/* Secão de Oportunidades */}
-            {personOpportunities && personOpportunities.length > 0 && (
-              <div style={{ marginTop: '10px', borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h4 style={{ margin: 0, color: '#1e293b', fontSize: '15px' }}>Oportunidades ({personOpportunities.length})</h4>
-                  <button onClick={() => setShowOpps(!showOpps)} style={{ background: '#8b5cf6', color: '#fff', border: 'none', borderRadius: '4px', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
-                    {showOpps ? 'Ocultar' : 'Ver Todas'}
-                  </button>
-                </div>
-                
-                {showOpps && (
-                  <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {personOpportunities.map(opp => (
-                      <div key={opp.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '12px' }}>
-                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '13px', marginBottom: '4px' }}>{opp.name}</div>
-                        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '2px' }}>📍 {opp.street || opp.city}</div>
-                        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '2px' }}>🏷️ Seg: {opp.segment} / {opp.subSegment}</div>
-                        <div style={{ fontSize: '11px', color: '#64748b' }}>📊 Níveis: {opp.class1} / {opp.class2}</div>
-                        {opp.addInfo && (
-                          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px', fontStyle: 'italic' }}>Info: {opp.addInfo}</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-          </div>
         </div>
       </div>
     );

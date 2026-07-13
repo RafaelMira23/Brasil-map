@@ -24,7 +24,7 @@ function App() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [panelMode, setPanelMode] = useState('closed');
 
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Default Claro
 
   // Filters state
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
@@ -54,9 +54,14 @@ function App() {
 
   const filteredData = useMemo(() => {
     return peopleData.filter(person => {
-      const nameMatch = person.name?.toLowerCase().includes(searchQuery.toLowerCase());
-      const numMatch = person.id?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesSearch = nameMatch || numMatch;
+      const q = searchQuery.toLowerCase();
+      const nameMatch = person.name?.toLowerCase().includes(q);
+      const numMatch = person.id?.toLowerCase().includes(q);
+      
+      const opps = oppData.filter(o => o.owner === person.name);
+      const oppMatch = opps.some(o => o.name?.toLowerCase().includes(q));
+
+      const matchesSearch = nameMatch || numMatch || oppMatch;
 
       const matchesState = selectedStates.length === 0 || selectedStates.includes(person.state);
       const matchesCity = selectedCities.length === 0 || selectedCities.includes(person.city);
@@ -65,7 +70,7 @@ function App() {
 
       return matchesSearch && matchesState && matchesCity && matchesCat;
     });
-  }, [peopleData, searchQuery, selectedStates, selectedCities, selectedCategories]);
+  }, [peopleData, oppData, searchQuery, selectedStates, selectedCities, selectedCategories]);
 
   const groupPeople = useMemo(() => {
     if (!selectedGroup) return [];
@@ -169,7 +174,7 @@ function App() {
       />
 
       <button onClick={() => { setPeopleData([]); setOppData([]); setPanelMode('closed'); }} style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 999, padding: '10px 14px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
-        Resetar Base (Upload)
+        Resetar Base
       </button>
     </div>
   );
