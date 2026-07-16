@@ -1,5 +1,19 @@
 import React, { useState, useMemo } from 'react';
 
+// Cor determinística a partir do texto da categoria — usa o mesmo algoritmo do
+// UploadScreen.jsx (stringToColor) para que a cor de cada categoria seja sempre
+// a mesma em qualquer lugar do app (mapa, badges, etc), mesmo quando a pessoa
+// tem mais de uma categoria.
+function categoryColor(str) {
+  let hash = 0;
+  const s = str || '';
+  for (let i = 0; i < s.length; i++) {
+    hash = s.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 70%, 50%)`;
+}
+
 export default function DetailsPanel({ mode, group, groupPeople, person, personOpportunities, onClose, onPersonSelect }) {
   const [listSearch, setListSearch] = useState('');
   const [showOpps, setShowOpps] = useState(true);
@@ -21,7 +35,12 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
       if (group?.type === 'full-state') {
         sectionName = p.city || 'Sem Cidade';
       } else if (group?.type === 'city') {
-        sectionName = p.category?.acronym || 'Sem Categoria';
+        // A lista já foi filtrada pela categoria clicada (considerando todas as
+        // categorias da pessoa, não só a principal). Sub-dividir de novo pela
+        // categoria "principal" de cada pessoa fazia quem tem 2 categorias
+        // aparecer numa seção separada (ex: "Y (1)") mesmo pertencendo à
+        // categoria que foi clicada — por isso aqui usamos uma única seção.
+        sectionName = '__flat__';
       } else {
         sectionName = p.city || 'Sem Cidade';
       }
@@ -74,11 +93,21 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '8px' }}>Categorias</label>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                {person.allCategories?.map((cat, i) => (
-                   <span key={i} style={{ fontSize: '12px', background: `${person.category?.color || '#888'}15`, color: person.category?.color || '#888', border: `1px solid ${person.category?.color || '#888'}40`, padding: '4px 10px', borderRadius: '20px', fontWeight: '700' }}>{cat}</span>
-                ))}
+                {person.allCategories?.map((cat, i) => {
+                  const color = categoryColor(cat);
+                  return (
+                    <span key={i} style={{ fontSize: '12px', background: `${color}15`, color, border: `1px solid ${color}40`, padding: '4px 10px', borderRadius: '20px', fontWeight: '700' }}>{cat}</span>
+                  );
+                })}
               </div>
             </div>
+
+            {person.subcategory && (
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '4px' }}>Categoria (detalhe)</label>
+                <span style={{ fontSize: '14px', color: 'var(--text-main)', fontWeight: '600' }}>{person.subcategory}</span>
+              </div>
+            )}
 
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '4px' }}>Localidade de Trabalho</label>
@@ -89,45 +118,54 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
           </div>
 
           {/* Seção de Contas (Oportunidades) */}
-          {personOpportunities && personOpportunities.length > 0 && (
-            <div style={{ marginTop: '10px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h4 style={{ margin: 0, color: 'var(--text-main)', fontSize: '16px', fontWeight: '700' }}>Contas Responsáveis ({personOpportunities.length})</h4>
+          <div style={{ marginTop: '10px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h4 style={{ margin: 0, color: 'var(--text-main)', fontSize: '16px', fontWeight: '700' }}>
+                Contas Responsáveis ({personOpportunities?.length || 0})
+              </h4>
+              {personOpportunities && personOpportunities.length > 0 && (
                 <button onClick={() => setShowOpps(!showOpps)} style={{ background: 'var(--bg-hover)', color: 'var(--text-main)', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
                   {showOpps ? 'Ocultar' : 'Expandir'}
                 </button>
-              </div>
-              
-              {showOpps && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {personOpportunities.map(opp => (
-                    <div key={opp.id} style={{ background: 'var(--bg-hover)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '16px', transition: 'transform 0.2s', cursor: 'default' }}>
-                      <div style={{ fontWeight: '800', color: 'var(--text-main)', fontSize: '14px', marginBottom: '8px' }}>{opp.name}</div>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                          <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Local:</span> {opp.street ? `${opp.street}, ${opp.city}` : opp.city}
-                        </div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                          <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Seg:</span> {opp.segment} {opp.subSegment ? `/ ${opp.subSegment}` : ''}
-                        </div>
-                        {(opp.class1 || opp.class2) && (
-                          <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                            <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Class:</span> {opp.class1} {opp.class2 ? `/ ${opp.class2}` : ''}
-                          </div>
-                        )}
-                        {opp.addInfo && (
-                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', fontStyle: 'italic', paddingLeft: '40px' }}>
-                            Info: {opp.addInfo}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
               )}
             </div>
-          )}
+
+            {(!personOpportunities || personOpportunities.length === 0) && (
+              <div style={{ fontSize: '13px', color: 'var(--text-muted)', background: 'var(--bg-hover)', borderRadius: '10px', padding: '14px 16px', lineHeight: 1.5 }}>
+                Nenhuma conta vinculada a esta pessoa. Isso acontece se a planilha de Contas ainda não foi importada,
+                ou se o campo "Account Owner" dessa conta não bate com o nome "{person.name}" cadastrado nas Pessoas.
+              </div>
+            )}
+            
+            {showOpps && personOpportunities && personOpportunities.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {personOpportunities.map(opp => (
+                  <div key={opp.id} style={{ background: 'var(--bg-hover)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '16px', transition: 'transform 0.2s', cursor: 'default' }}>
+                    <div style={{ fontWeight: '800', color: 'var(--text-main)', fontSize: '14px', marginBottom: '8px' }}>{opp.name}</div>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                        <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Local:</span> {opp.street ? `${opp.street}, ${opp.city}` : opp.city}
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                        <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Seg:</span> {opp.segment} {opp.subSegment ? `/ ${opp.subSegment}` : ''}
+                      </div>
+                      {(opp.class1 || opp.class2) && (
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                          <span style={{ filter: 'grayscale(1)', color: '#94a3b8' }}>Class:</span> {opp.class1} {opp.class2 ? `/ ${opp.class2}` : ''}
+                        </div>
+                      )}
+                      {opp.addInfo && (
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', fontStyle: 'italic', paddingLeft: '40px' }}>
+                          Info: {opp.addInfo}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
         </div>
       </div>
@@ -175,11 +213,15 @@ export default function DetailsPanel({ mode, group, groupPeople, person, personO
                 }, {})
               : null;
 
+            const isFlatSection = sectionName === '__flat__';
+
             return (
               <div key={sectionName} style={{ marginBottom: '18px' }}>
-                <h3 style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', padding: '4px 8px', background: 'var(--bg-hover)', borderRadius: '4px', fontWeight: '600', cursor: 'default' }}>
-                  {sectionName} ({sectionPeople.length})
-                </h3>
+                {!isFlatSection && (
+                  <h3 style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', padding: '4px 8px', background: 'var(--bg-hover)', borderRadius: '4px', fontWeight: '600', cursor: 'default' }}>
+                    {sectionName} ({sectionPeople.length})
+                  </h3>
+                )}
 
                 {subGroups ? (
                   Object.entries(subGroups).sort().map(([catName, catPeople]) => (

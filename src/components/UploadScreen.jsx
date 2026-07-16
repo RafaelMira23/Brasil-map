@@ -105,39 +105,49 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
 
+  function withSuppressedXlsxWarnings(fn) {
+    const methods = ['log', 'warn', 'error'];
+    const originals = {};
+    methods.forEach(m => {
+      originals[m] = console[m];
+      console[m] = (...args) => {
+        const text = args.map(a => (typeof a === 'string' ? a : '')).join(' ');
+        if (/uncompressed|bad crc|corrupt/i.test(text)) return;
+        originals[m].apply(console, args);
+      };
+    });
+    try {
+      return fn();
+    } finally {
+      methods.forEach(m => { console[m] = originals[m]; });
+    }
+  }
+
   const parseExcel = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        // Suppress "Bad uncompressed size" warnings from XLSX library
-        const origWarn = console.warn;
-        const origError = console.error;
-        console.warn = (...args) => {
-          if (args[0] && typeof args[0] === 'string' && args[0].includes('uncompressed')) return;
-          origWarn.apply(console, args);
-        };
-        console.error = (...args) => {
-          if (args[0] && typeof args[0] === 'string' && args[0].includes('uncompressed')) return;
-          origError.apply(console, args);
-        };
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheetName = workbook.SheetNames[0];
-          const json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
-          resolve(json);
-        } catch (err) {
-          reject(err);
-        } finally {
-          console.warn = origWarn;
-          console.error = origError;
-        }
+        withSuppressedXlsxWarnings(() => {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            // Lê TODAS as abas, não só a primeira — resolve o problema do item 2 também
+            let allRows = [];
+            workbook.SheetNames.forEach(sheetName => {
+              const sheetJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+              allRows = allRows.concat(sheetJson);
+            });
+            resolve(allRows);
+          } catch (err) {
+            reject(err);
+          }
+        });
       };
       reader.onerror = (error) => reject(error);
       reader.readAsArrayBuffer(file);
     });
   };
-
+  
   const handlePeopleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;

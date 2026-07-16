@@ -25,11 +25,20 @@ const FilterIcon = () => (
   </svg>
 );
 
+// Ícone simples para diferenciar visualmente o resultado de "conta" do de "pessoa"
+const BuildingIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1" />
+  </svg>
+);
+
 export default function Topbar({ 
   searchQuery, 
   setSearchQuery, 
   filteredData, 
+  searchedAccounts = [],
   onPersonSelect,
+  onAccountSelect,
   isDarkMode,
   toggleDarkMode,
   onOpenFilters,
@@ -38,6 +47,9 @@ export default function Topbar({
   const [isFocused, setIsFocused] = useState(false);
 
   const showResults = isFocused && searchQuery.length > 0;
+  const peopleResults = filteredData.slice(0, 15);
+  const accountResults = searchedAccounts.slice(0, 10);
+  const hasAnyResult = peopleResults.length > 0 || accountResults.length > 0;
 
   return (
     <div className="topbar">
@@ -46,7 +58,7 @@ export default function Topbar({
           <SearchIcon />
           <input 
             type="text" 
-            placeholder="Pesquisar por nome ou número da pessoa..." 
+            placeholder="Pesquisar por nome, número da pessoa ou conta..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -91,27 +103,59 @@ export default function Topbar({
 
       {showResults && (
         <div className="search-results">
-          {filteredData.length === 0 ? (
+          {!hasAnyResult ? (
             <div className="search-result-item" style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
               Nenhum resultado encontrado
             </div>
           ) : (
-            filteredData.slice(0, 15).map(person => (
-              <div 
-                key={person.id} 
-                className="search-result-item"
-                onMouseDown={() => onPersonSelect(person)}
-              >
-                <div className="result-name">{person.name}</div>
-                <div className="result-location">
-                  {person.nNumber} · {person.city}
+            <>
+              {peopleResults.map(person => (
+                <div 
+                  key={person.id} 
+                  className="search-result-item"
+                  onMouseDown={() => onPersonSelect(person)}
+                >
+                  <div className="result-name">{person.name}</div>
+                  <div className="result-location">
+                    {person.nNumber} · {person.city}
+                  </div>
+                  <div className="result-meta">
+                    <span className="result-cat" style={{ color: person.category?.color }}>{person.category?.acronym}</span>
+                    {person.state}
+                  </div>
                 </div>
-                <div className="result-meta">
-                  <span className="result-cat" style={{ color: person.category?.color }}>{person.category?.acronym}</span>
-                  {person.state}
-                </div>
-              </div>
-            ))
+              ))}
+
+              {accountResults.length > 0 && (
+                <>
+                  <div
+                    className="search-result-item"
+                    style={{ cursor: 'default', paddingTop: '10px', paddingBottom: '6px', background: 'var(--bg-hover)' }}
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <BuildingIcon /> Contas
+                    </div>
+                  </div>
+                  {accountResults.map(account => (
+                    <div
+                      key={account.id}
+                      className="search-result-item"
+                      onMouseDown={() => onAccountSelect && onAccountSelect(account)}
+                    >
+                      <div className="result-name">{account.name}</div>
+                      <div className="result-location">
+                        {[account.city, account.state].filter(Boolean).join(' · ') || 'Localização não informada'}
+                      </div>
+                      <div className="result-meta">
+                        {account.segment || 'Sem segmento'}
+                        {account.owner ? ` · Responsável: ${account.owner}` : ''}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
           )}
         </div>
       )}
