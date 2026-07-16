@@ -18,6 +18,24 @@ function normalizeCompact(str) {
   return normalize(str).replace(/\s+/g, '');
 }
 
+// Gera uma chave canônica de nome, imune a:
+// - "SOBRENOME, NOME" vs "Nome Sobrenome" (vírgula é removida antes de tudo)
+// - ordem das palavras (as partes são ordenadas alfabeticamente)
+// - maiúsculas/minúsculas e acentos (mesmo tratamento de normalize())
+// Ex: "SILVA, JOÃO" e "João Silva" e "SILVA JOAO" todos viram "JOAOSILVA"
+function normalizeNameKey(str) {
+  const clean = (str || '')
+    .toString()
+    .replace(',', ' ')
+    .trim()
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  const parts = clean.split(/\s+/).filter(Boolean).sort();
+  return parts.join('');
+}
+
 function getField(row, aliases) {
   const keys = Object.keys(row);
   for (const alias of aliases) {
@@ -199,7 +217,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
 
         parsed.push({
           id, nNumber: id, name, 
-          nameNormalized: normalizeCompact(name), 
+          nameNormalized: normalizeNameKey(name), 
           email, managerName: manager,
           city: rawCity ? toTitleCase(rawCity) : 'Não Mapeada',
           state, coordinates,
@@ -269,7 +287,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           id: accountId || `ACC-${i}`,
           name: accountName,
           segment, subSegment, 
-          owner, ownerNormalized: normalizeCompact(owner),
+          owner, ownerNormalized: normalizeNameKey(owner),
           country, state, city: city || '', street, zip,
           profile, platform, class1, class2, addInfo,
           coordinates: jitteredCoords,
