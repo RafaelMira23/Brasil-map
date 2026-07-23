@@ -220,6 +220,7 @@ function App() {
         oppData={filteredOppData}
         selectedPerson={selectedPerson} 
         selectedAccount={selectedAccount}
+        accountOwnerPerson={accountOwnerPerson}
         selectedGroup={selectedGroup}
         onPersonSelect={handleSelectPerson}
         onAccountSelect={handleSelectAccount}

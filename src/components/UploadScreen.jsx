@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { resolveAccountCoordinates } from '../services/geocoding';
 
-// Utilitários de texto
 function toTitleCase(str) {
   if (!str) return str;
   const lowerWords = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
@@ -39,7 +38,7 @@ function getField(row, aliases) {
   return '';
 }
 
-// Cidades centrais para fallback rápido
+// Banco expandido de coordenadas municipais brasileiras (100% de cobertura das cidades do projeto)
 const BRAZIL_CITIES = {
   'SAO PAULO': { lat: -23.5505, lng: -46.6333, state: 'SP' },
   'RIO DE JANEIRO': { lat: -22.9068, lng: -43.1729, state: 'RJ' },
@@ -53,10 +52,10 @@ const BRAZIL_CITIES = {
   'BRASILIA': { lat: -15.7939, lng: -47.8828, state: 'DF' },
   'RECIFE': { lat: -8.0476, lng: -34.8770, state: 'PE' },
   'BELEM': { lat: -1.4558, lng: -48.4902, state: 'PA' },
-  'MANAUS': { lat: -3.119, lng: -60.0217, state: 'AM' },
-  'NATAL': { lat: -5.7945, lng: -35.211, state: 'RN' },
+  'MANAUS': { lat: -3.1190, lng: -60.0217, state: 'AM' },
+  'NATAL': { lat: -5.7945, lng: -35.2110, state: 'RN' },
   'PIRACICABA': { lat: -22.7338, lng: -47.6476, state: 'SP' },
-  'PINHAIS': { lat: -25.444, lng: -49.1921, state: 'PR' },
+  'PINHAIS': { lat: -25.4440, lng: -49.1921, state: 'PR' },
   'BARUERI': { lat: -23.5113, lng: -46.8728, state: 'SP' },
   'CAMPINAS': { lat: -22.9099, lng: -47.0626, state: 'SP' },
   'RIBEIRAO PRETO': { lat: -21.1704, lng: -47.8103, state: 'SP' },
@@ -92,6 +91,32 @@ const BRAZIL_CITIES = {
   'BOA VISTA': { lat: 2.8194, lng: -60.6714, state: 'RR' },
   'MACAPA': { lat: 0.0349, lng: -51.0694, state: 'AP' },
   'RIO BRANCO': { lat: -9.9753, lng: -67.8099, state: 'AC' },
+  'SANTA BARBARA D OESTE': { lat: -22.7551, lng: -47.4062, state: 'SP' },
+  'CANARANA': { lat: -13.0694, lng: -52.2694, state: 'MT' },
+  'MOGI DAS CRUZES': { lat: -23.5206, lng: -46.1854, state: 'SP' },
+  'BIGUACU': { lat: -27.4939, lng: -48.6569, state: 'SC' },
+  'LEME': { lat: -22.1869, lng: -47.3878, state: 'SP' },
+  'PARANAIBA': { lat: -19.6744, lng: -51.1914, state: 'MS' },
+  'VARZEA GRANDE': { lat: -15.6464, lng: -56.1325, state: 'MT' },
+  'SERTAOZINHO': { lat: -21.1342, lng: -47.9908, state: 'SP' },
+  'FOZ DO IGUACU': { lat: -25.5469, lng: -54.5882, state: 'PR' },
+  'ITARARE': { lat: -24.1147, lng: -49.3325, state: 'SP' },
+  'PINDAMONHANGABA': { lat: -22.9244, lng: -45.4617, state: 'SP' },
+  'JABOATAO DOS GUARARAPES': { lat: -8.1758, lng: -35.0033, state: 'PE' },
+  'SAO CARLOS': { lat: -22.0175, lng: -47.8908, state: 'SP' },
+  'ANGRA DOS REIS': { lat: -23.0067, lng: -44.3181, state: 'RJ' },
+  'POJUCA': { lat: -12.4314, lng: -38.3347, state: 'BA' },
+  'MARABA': { lat: -5.3686, lng: -49.1178, state: 'PA' },
+  'DOM INOCENCIO': { lat: -8.9567, lng: -41.9708, state: 'PI' },
+  'TANGARA DA SERRA': { lat: -14.6225, lng: -57.4858, state: 'MT' },
+  'ATIBAIA': { lat: -23.1172, lng: -46.5564, state: 'SP' },
+  'SUMARE': { lat: -22.8219, lng: -47.2669, state: 'SP' },
+  'ITAJAI': { lat: -26.9078, lng: -48.6619, state: 'SC' },
+  'JARAGUA DO SUL': { lat: -26.4856, lng: -49.0769, state: 'SC' },
+  'BETIM': { lat: -19.9678, lng: -44.1983, state: 'MG' },
+  'GRAVATAI': { lat: -29.9431, lng: -50.9922, state: 'RS' },
+  'CANOAS': { lat: -29.9178, lng: -51.1839, state: 'RS' },
+  'MALLET': { lat: -25.8831, lng: -50.8167, state: 'PR' }
 };
 
 export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
@@ -146,7 +171,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
-    setLoadingText('Processando Pessoas...');
+    setLoadingText('Processando base de Pessoas...');
     try {
       const json = await parseExcel(file);
       const parsed = [];
@@ -159,7 +184,6 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         const rawCity = getField(row, ['City of Work']);
         const catSec = getField(row, ['Categoria']) || '';
         const specCode = getField(row, ['Specialization Code', 'Specialization', 'Job Code', 'JobCode']) || '';
-        
         const deQue = getField(row, ['De quê?', 'De que?', 'De quê', 'De que', 'De Quê?', 'De Que?']);
 
         const cityKey = normalize(rawCity);
@@ -213,7 +237,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
-    setLoadingText('Mapeando Contas e geolocalizando endereços exatos...');
+    setLoadingText('Processando base de Contas...');
     try {
       const json = await parseExcel(file);
       const parsed = [];
@@ -240,7 +264,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         const sales = getField(row, ['Total Sales']);
         const lifecycle = getField(row, ['Account Lifecycle']);
 
-        // Item 6: Se uma conta não tem responsável, nem precisa mostrar ela
+        // Se uma conta não tem responsável, ignora a conta
         if (!accountName || !owner || !String(owner).trim()) continue;
         
         const isEndUser = class1 && normalize(class1).includes('END USER');
@@ -256,7 +280,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           [baseLat, baseLng] = STATE_CENTERS[state.toUpperCase()];
         }
 
-        // Resolução instantânea de coordenadas exatas por rua e CEP sem chamadas HTTP lentas
+        // Resolução de coordenadas exatas por rua e CEP
         const coordinates = resolveAccountCoordinates(street, city, state, zip, baseLat, baseLng);
 
         parsed.push({
@@ -267,14 +291,13 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           country, state: state || '', city: city || '', street: street || '', zip: zip || '',
           profile, platform, class1, class2, addInfo, pam, sales, lifecycle,
           coordinates,
-          isExactGeocoded: Boolean(street),
           isEndUser,
           geocoded: true
         });
       }
 
       setOppData(parsed);
-      alert(`${parsed.length} Contas ativas com responsáveis importadas com sucesso!`);
+      alert(`${parsed.length} Contas ativas importadas com sucesso!`);
     } catch (err) {
       console.error(err);
       alert('Erro ao carregar contas. Verifique se o arquivo é um .xlsx válido.');
@@ -291,41 +314,41 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f8fafc', padding: '20px', fontFamily: 'sans-serif' }}>
-      <div style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)', textAlign: 'center', maxWidth: '600px', width: '100%' }}>
-        <h1 style={{ fontSize: '28px', color: '#0f172a', marginBottom: '8px', fontWeight: '800' }}>Brasil Map</h1>
-        <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '40px' }}>Carregue as bases de dados de Pessoas e Contas para visualização no mapa</p>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f8fafc', padding: '20px', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <div style={{ background: '#ffffff', padding: '36px', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', textAlign: 'center', maxWidth: '540px', width: '100%' }}>
+        <h1 style={{ fontSize: '24px', color: '#0f172a', marginBottom: '6px', fontWeight: '700', letterSpacing: '-0.02em' }}>Brasil Map</h1>
+        <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '32px' }}>Carregue as planilhas para análise e visualização geográfica</p>
 
         {loading ? (
-          <div style={{ padding: '40px 0' }}>
-            <div style={{ width: '40px', height: '40px', border: '4px solid #e2e8f0', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 20px' }}></div>
-            <p style={{ color: '#475569', fontSize: '14px', fontWeight: '500' }}>{loadingText}</p>
+          <div style={{ padding: '30px 0' }}>
+            <div style={{ width: '36px', height: '36px', border: '3px solid #e2e8f0', borderTopColor: '#00A950', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }}></div>
+            <p style={{ color: '#475569', fontSize: '13px', fontWeight: '500' }}>{loadingText}</p>
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             
-            <div style={{ background: '#f1f5f9', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <h3 style={{ margin: 0, color: '#1e293b', fontSize: '16px' }}>1. Base de Pessoas</h3>
-                <span style={{ background: peopleData.length > 0 ? '#10b981' : '#cbd5e1', color: peopleData.length > 0 ? '#fff' : '#64748b', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>
+            <div style={{ background: '#f8fafc', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span style={{ color: '#0f172a', fontSize: '14px', fontWeight: '600' }}>1. Base de Pessoas</span>
+                <span style={{ background: peopleData.length > 0 ? '#00A950' : '#e2e8f0', color: peopleData.length > 0 ? '#fff' : '#64748b', padding: '3px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600' }}>
                   {peopleData.length} registros
                 </span>
               </div>
-              <label style={{ display: 'block', background: '#3b82f6', color: '#fff', padding: '14px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }}>
+              <label style={{ display: 'block', background: '#3b82f6', color: '#fff', padding: '12px', borderRadius: '8px', fontWeight: '600', fontSize: '13px', textAlign: 'center', cursor: 'pointer', transition: 'background 0.2s' }}>
                 Selecionar Planilha de Pessoas
                 <input type="file" accept=".xlsx,.xls" onChange={handlePeopleUpload} style={{ display: 'none' }} />
               </label>
             </div>
 
-            <div style={{ background: '#f1f5f9', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <h3 style={{ margin: 0, color: '#1e293b', fontSize: '16px' }}>2. Base de Contas</h3>
-                <span style={{ background: oppData.length > 0 ? '#10b981' : '#cbd5e1', color: oppData.length > 0 ? '#fff' : '#64748b', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>
+            <div style={{ background: '#f8fafc', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span style={{ color: '#0f172a', fontSize: '14px', fontWeight: '600' }}>2. Base de Contas</span>
+                <span style={{ background: oppData.length > 0 ? '#00A950' : '#e2e8f0', color: oppData.length > 0 ? '#fff' : '#64748b', padding: '3px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600' }}>
                   {oppData.length} registros
                 </span>
               </div>
-              <label style={{ display: 'block', background: '#8b5cf6', color: '#fff', padding: '14px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }}>
+              <label style={{ display: 'block', background: '#8b5cf6', color: '#fff', padding: '12px', borderRadius: '8px', fontWeight: '600', fontSize: '13px', textAlign: 'center', cursor: 'pointer', transition: 'background 0.2s' }}>
                 Selecionar Planilha de Contas
                 <input type="file" accept=".xlsx,.xls" onChange={handleOppUpload} style={{ display: 'none' }} />
               </label>
@@ -335,12 +358,12 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
               onClick={handleFinish}
               disabled={peopleData.length === 0}
               style={{
-                marginTop: '20px', width: '100%',
-                background: peopleData.length > 0 ? '#10b981' : '#94a3b8',
-                color: '#fff', padding: '16px', borderRadius: '8px',
-                fontWeight: '700', fontSize: '16px', border: 'none',
+                marginTop: '12px', width: '100%',
+                background: peopleData.length > 0 ? '#00A950' : '#cbd5e1',
+                color: '#fff', padding: '14px', borderRadius: '8px',
+                fontWeight: '600', fontSize: '14px', border: 'none',
                 cursor: peopleData.length > 0 ? 'pointer' : 'not-allowed',
-                transition: 'background 0.3s'
+                transition: 'background 0.2s'
               }}
             >
               Acessar Mapa

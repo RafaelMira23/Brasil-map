@@ -24,9 +24,18 @@ function categoryColor(str) {
   return `hsl(${h}, 70%, 50%)`;
 }
 
-const createCountBadge = (color, count, isDarkMode = false) => {
-  const size = count > 99 ? 34 : count > 9 ? 28 : 22;
-  const html = `<div style="background:${color};color:#fff;width:${size}px;height:${size}px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:${size * 0.4}px;font-weight:bold;box-shadow:0 3px 6px rgba(0,0,0,0.25);">${count}</div>`;
+function isValidCoord(coords) {
+  if (!coords || !Array.isArray(coords) || coords.length < 2) return false;
+  const [lat, lng] = coords;
+  return typeof lat === 'number' && typeof lng === 'number' &&
+    !isNaN(lat) && !isNaN(lng) &&
+    lat >= -35 && lat <= 6 &&   // limites do Brasil
+    lng >= -75 && lng <= -34;
+}
+
+const createCountBadge = (color, count) => {
+  const size = count > 99 ? 32 : count > 9 ? 26 : 22;
+  const html = `<div style="background:${color};color:#fff;width:${size}px;height:${size}px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:${size * 0.42}px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.2);">${count}</div>`;
   return L.divIcon({
     html,
     className: '',
@@ -35,15 +44,27 @@ const createCountBadge = (color, count, isDarkMode = false) => {
   });
 };
 
-const createOppIcon = (color = '#8b5cf6', isExact = false) => {
-  const html = isExact
-    ? `<div style="background:${color};width:20px;height:20px;border-radius:4px;border:2px solid #fff;box-shadow:0 0 12px ${color};display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:bold;">🏢</div>`
-    : `<div style="background:${color};width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 10px ${color};"></div>`;
+// Ícone de conta — building pin roxo, consistente para todas as contas
+const ACCOUNT_ICON = L.divIcon({
+  html: `<div style="background:#7c3aed;width:28px;height:28px;border-radius:6px;border:2px solid #fff;box-shadow:0 3px 8px rgba(124,58,237,0.45);display:flex;align-items:center;justify-content:center;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>
+    </svg>
+  </div>`,
+  className: '',
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+});
+
+// Ícone de responsável destacado (quando conta está selecionada)
+const createOwnerHighlightIcon = (initial) => {
   return L.divIcon({
-    html,
+    html: `<div style="background:#00A950;width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,169,80,0.6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;">
+      ${initial || '?'}
+    </div>`,
     className: '',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
   });
 };
 
@@ -54,28 +75,28 @@ function ZoomController({ onZoomChange }) {
   return null;
 }
 
-function ViewController({ selectedPerson, selectedAccount, selectedGroup, myOpps }) {
+function ViewController({ selectedPerson, selectedAccount, selectedGroup, myOpps, accountOwnerPerson }) {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedAccount && selectedAccount.coordinates) {
+    if (selectedAccount && isValidCoord(selectedAccount.coordinates)) {
       map.setView(selectedAccount.coordinates, 14, { animate: true });
     }
   }, [selectedAccount, map]);
 
   useEffect(() => {
-    if (selectedPerson) {
+    if (selectedPerson && !selectedAccount) {
       if (myOpps && myOpps.length > 0) {
         const bounds = L.latLngBounds([selectedPerson.coordinates]);
         myOpps.forEach(o => {
-          if (o.coordinates) bounds.extend(o.coordinates);
+          if (isValidCoord(o.coordinates)) bounds.extend(o.coordinates);
         });
         map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14, animate: true });
-      } else if (selectedPerson.coordinates) {
+      } else if (isValidCoord(selectedPerson.coordinates)) {
         map.setView(selectedPerson.coordinates, 12, { animate: true });
       }
     }
-  }, [selectedPerson, myOpps, map]);
+  }, [selectedPerson, myOpps, map, selectedAccount]);
 
   useEffect(() => {
     if (selectedGroup && selectedGroup.coordinates && !selectedPerson && !selectedAccount) {
@@ -115,11 +136,11 @@ function BubbleLayer({ data, onGroupSelect, isDarkMode }) {
           )}
           <Marker
             position={group.simulatedCoordinates}
-            icon={createCountBadge(group.color, group.count, isDarkMode)}
+            icon={createCountBadge(group.color, group.count)}
             eventHandlers={{ click: () => onGroupSelect(group) }}
           >
-            <Tooltip direction="top" offset={[0, -10]} opacity={0.9}>
-              <div style={{ fontWeight: 'bold', fontSize: '13px', color: '#1e293b' }}>
+            <Tooltip direction="top" offset={[0, -10]} opacity={0.95}>
+              <div style={{ fontWeight: '600', fontSize: '12px', color: '#0f172a' }}>
                 {group.type === 'state'
                   ? `${group.state} — ${group.acronym}`
                   : `${group.city} / ${group.state} — ${group.acronym}`
@@ -134,31 +155,68 @@ function BubbleLayer({ data, onGroupSelect, isDarkMode }) {
   );
 }
 
-function OpportunitiesLayer({ opps, onAccountSelect }) {
-  if (!opps || opps.length === 0) return null;
+function OpportunitiesLayer({ opps, onAccountSelect, selectedAccountId }) {
+  // Filtra apenas contas com coordenadas válidas dentro do Brasil
+  const validOpps = useMemo(() => {
+    return (opps || []).filter(opp => isValidCoord(opp.coordinates));
+  }, [opps]);
+
+  if (validOpps.length === 0) return null;
 
   return (
     <>
-      {opps.map(opp => (
+      {validOpps.map(opp => (
         <Marker
           key={opp.id}
           position={opp.coordinates}
-          icon={createOppIcon('#8b5cf6', opp.isExactGeocoded)}
-          zIndexOffset={1000}
+          icon={ACCOUNT_ICON}
+          zIndexOffset={opp.id === selectedAccountId ? 2000 : 1000}
           eventHandlers={{
             click: () => onAccountSelect && onAccountSelect(opp)
           }}
         >
-          <Tooltip direction="top" offset={[0, -10]} opacity={1}>
-            <div style={{ fontWeight: 'bold', fontSize: '13px', color: '#1e293b' }}>
+          <Tooltip direction="top" offset={[0, -14]} opacity={0.95}>
+            <div style={{ fontWeight: '600', fontSize: '12px', color: '#0f172a' }}>
               {opp.name}
             </div>
             <div style={{ fontSize: '11px', color: '#64748b' }}>Segmento: {opp.segment || 'N/A'}</div>
-            <div style={{ fontSize: '11px', color: '#64748b' }}>📍 {[opp.street, opp.city].filter(Boolean).join(', ')}</div>
-            {opp.owner && <div style={{ fontSize: '11px', color: '#8b5cf6', fontWeight: 'bold' }}>👤 Responsável: {opp.owner}</div>}
+            <div style={{ fontSize: '11px', color: '#64748b' }}>{[opp.street, opp.city].filter(Boolean).join(', ')}</div>
+            {opp.owner && <div style={{ fontSize: '11px', color: '#7c3aed', fontWeight: '600', marginTop: '2px' }}>Responsável: {opp.owner}</div>}
           </Tooltip>
         </Marker>
       ))}
+    </>
+  );
+}
+
+// Marcador do responsável quando uma conta está selecionada
+function AccountOwnerLayer({ account, owner }) {
+  if (!account || !owner || !isValidCoord(owner.coordinates) || !isValidCoord(account.coordinates)) return null;
+
+  const initial = owner.name?.charAt(0)?.toUpperCase() || '?';
+
+  return (
+    <>
+      {/* Linha conectando conta → responsável */}
+      <Polyline
+        positions={[account.coordinates, owner.coordinates]}
+        color="#00A950"
+        weight={2}
+        opacity={0.6}
+        dashArray="5, 6"
+      />
+      {/* Marcador do responsável */}
+      <Marker
+        position={owner.coordinates}
+        icon={createOwnerHighlightIcon(initial)}
+        zIndexOffset={3000}
+      >
+        <Tooltip direction="top" offset={[0, -18]} opacity={0.97} permanent={false}>
+          <div style={{ fontWeight: '600', fontSize: '12px', color: '#0f172a' }}>{owner.name}</div>
+          <div style={{ fontSize: '11px', color: '#00A950', fontWeight: '500' }}>Responsável pela conta</div>
+          <div style={{ fontSize: '11px', color: '#64748b' }}>{owner.city}/{owner.state}</div>
+        </Tooltip>
+      </Marker>
     </>
   );
 }
@@ -168,7 +226,7 @@ function StateGeoJSONLayer({ geojsonData, clickedState, onStateClick }) {
   const hoveredRef = useRef(null);
 
   const defaultStyle = { color: '#00A950', weight: 1, fillOpacity: 0.0 };
-  const activeStyle = { color: '#00A950', weight: 3, fillColor: '#00A950', fillOpacity: 0.25 };
+  const activeStyle = { color: '#00A950', weight: 2.5, fillColor: '#00A950', fillOpacity: 0.2 };
   const hoverStyle = { color: '#00A950', weight: 2, fillColor: '#00A950', fillOpacity: 0.07 };
 
   const applyStyle = useCallback((sigla) => {
@@ -224,6 +282,7 @@ export default function MapComponent({
   oppData,
   selectedPerson,
   selectedAccount,
+  accountOwnerPerson,
   selectedGroup,
   onPersonSelect,
   onAccountSelect,
@@ -242,7 +301,7 @@ export default function MapComponent({
   const [currentZoom, setCurrentZoom] = useState(4);
 
   const minZoomLevel = 4;
-  const maxZoomLevel = 14;
+  const maxZoomLevel = 18;
   const brazilBounds = [[-34.5, -74.0], [5.0, -34.0]];
 
   useEffect(() => {
@@ -277,7 +336,7 @@ export default function MapComponent({
     }
   }, [clickedState, onStateDeselect]);
 
-  // Item 2 e Item 3: Múltiplas categorias + Visualização global em todo o Brasil
+  // Bolhas por estado — renderiza na carga inicial sem necessidade de clicar
   const stateLayerData = useMemo(() => {
     if (currentZoom > 5 || mapMode !== 'people') return [];
     const groups = {};
@@ -308,7 +367,7 @@ export default function MapComponent({
     if (currentZoom < 6 || mapMode !== 'people') return [];
     const groups = {};
     data.forEach(p => {
-      if (!p.city || !p.state || !p.coordinates) return;
+      if (!p.city || !p.state || !isValidCoord(p.coordinates)) return;
       const cats = p.allCategories && p.allCategories.length > 0 ? p.allCategories : ['Sem Categoria'];
 
       cats.forEach(catAcr => {
@@ -330,13 +389,13 @@ export default function MapComponent({
     return Object.values(groups);
   }, [data, currentZoom, mapMode]);
 
-  // Contas da pessoa selecionada (Item 8)
+  // Contas do responsável selecionado (modo pessoas)
   const selectedPersonOpps = useMemo(() => {
     if (!selectedPerson || !oppData) return [];
-    return oppData.filter(o => o.ownerNormalized === selectedPerson.nameNormalized && o.coordinates);
+    return oppData.filter(o => o.ownerNormalized === selectedPerson.nameNormalized && isValidCoord(o.coordinates));
   }, [selectedPerson, oppData]);
 
-  // Extrair resumo de categorias para a Legenda (Item 10)
+  // Resumo de categorias para a Legenda
   const legendCategories = useMemo(() => {
     const counts = {};
     data.forEach(p => {
@@ -374,6 +433,7 @@ export default function MapComponent({
           selectedAccount={selectedAccount}
           selectedGroup={selectedGroup}
           myOpps={selectedPersonOpps}
+          accountOwnerPerson={accountOwnerPerson}
         />
         <ClickOutsideHandler onClickOutside={handleClickOutside} />
 
@@ -385,7 +445,7 @@ export default function MapComponent({
           />
         )}
 
-        {/* MODO PESSOAS: Pinos e Bolhas Globais de Pessoas */}
+        {/* MODO PESSOAS: Bolhas e clusters */}
         {mapMode === 'people' && currentZoom <= 5 && stateLayerData.length > 0 && (
           <BubbleLayer data={stateLayerData} onGroupSelect={onGroupSelect} isDarkMode={isDarkMode} />
         )}
@@ -393,18 +453,33 @@ export default function MapComponent({
           <BubbleLayer data={cityClusters} onGroupSelect={onGroupSelect} isDarkMode={isDarkMode} />
         )}
 
-        {/* MODO CONTAS: Pinos de Contas no Mapa (Item 4 e 5) */}
+        {/* MODO CONTAS: Pinos de todas as contas */}
         {mapMode === 'accounts' && (
-          <OpportunitiesLayer opps={oppData} onAccountSelect={onAccountSelect} />
+          <OpportunitiesLayer
+            opps={oppData}
+            onAccountSelect={onAccountSelect}
+            selectedAccountId={selectedAccount?.id}
+          />
         )}
 
-        {/* Pinos das Contas de um Responsável selecionado (Item 8) */}
+        {/* Pinos das contas do responsável selecionado (modo pessoas) */}
         {mapMode === 'people' && selectedPersonOpps.length > 0 && (
-          <OpportunitiesLayer opps={selectedPersonOpps} onAccountSelect={onAccountSelect} />
+          <OpportunitiesLayer
+            opps={selectedPersonOpps}
+            onAccountSelect={onAccountSelect}
+            selectedAccountId={selectedAccount?.id}
+          />
+        )}
+
+        {/* Responsável destacado quando uma conta está selecionada */}
+        {selectedAccount && accountOwnerPerson && (
+          <AccountOwnerLayer
+            account={selectedAccount}
+            owner={accountOwnerPerson}
+          />
         )}
       </MapContainer>
 
-      {/* Legenda de Categorias no Canto do Mapa (Item 10) */}
       <MapLegend
         categories={legendCategories}
         selectedCategories={selectedCategories}
@@ -419,7 +494,7 @@ export default function MapComponent({
       )}
 
       {clickedState && (
-        <div style={{ position: 'absolute', top: 90, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,169,80,0.92)', color: '#fff', padding: '4px 16px', borderRadius: 20, fontSize: 12, zIndex: 1000, fontWeight: '600', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 90, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,169,80,0.92)', color: '#fff', padding: '4px 16px', borderRadius: 20, fontSize: 12, zIndex: 1000, fontWeight: '500' }}>
           {STATE_NAMES[clickedState] || clickedState} — clique fora para desmarcar
         </div>
       )}

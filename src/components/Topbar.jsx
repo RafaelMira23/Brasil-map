@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 
 const SearchIcon = () => (
-  <svg className="icon search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
   </svg>
 );
 
 const SunIcon = () => (
-  <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
   </svg>
 );
 
 const MoonIcon = () => (
-  <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
   </svg>
 );
 
 const FilterIcon = () => (
-  <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ width: '18px', height: '18px' }}>
+  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
   </svg>
 );
@@ -61,13 +61,13 @@ export default function Topbar({
     <div className="topbar">
       <div className="topbar-main">
         
-        {/* Item 4: Mudar modo de visão do mapa (Pessoas vs Contas) */}
+        {/* Seletor de Modo de Mapa */}
         <div
           style={{
             display: 'flex',
             background: 'var(--bg-hover)',
             padding: '3px',
-            borderRadius: '10px',
+            borderRadius: '8px',
             border: '1px solid var(--border-color)',
             gap: '2px'
           }}
@@ -79,11 +79,11 @@ export default function Topbar({
               alignItems: 'center',
               gap: '6px',
               padding: '6px 12px',
-              borderRadius: '8px',
+              borderRadius: '6px',
               border: 'none',
               background: mapMode === 'people' ? 'var(--accent-color)' : 'transparent',
               color: mapMode === 'people' ? '#fff' : 'var(--text-main)',
-              fontWeight: '700',
+              fontWeight: '600',
               fontSize: '12px',
               cursor: 'pointer',
               transition: 'all 0.2s'
@@ -98,11 +98,11 @@ export default function Topbar({
               alignItems: 'center',
               gap: '6px',
               padding: '6px 12px',
-              borderRadius: '8px',
+              borderRadius: '6px',
               border: 'none',
               background: mapMode === 'accounts' ? '#8b5cf6' : 'transparent',
               color: mapMode === 'accounts' ? '#fff' : 'var(--text-main)',
-              fontWeight: '700',
+              fontWeight: '600',
               fontSize: '12px',
               cursor: 'pointer',
               transition: 'all 0.2s'
@@ -116,7 +116,7 @@ export default function Topbar({
           <SearchIcon />
           <input 
             type="text" 
-            placeholder="Pesquisar por nome, número da pessoa ou conta..." 
+            placeholder="Pesquisar por nome, SESA ou conta..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -132,18 +132,18 @@ export default function Topbar({
           <button
             onClick={onOpenFilters}
             style={{
-              display: 'flex', alignItems: 'center', gap: '8px',
+              display: 'flex', alignItems: 'center', gap: '6px',
               background: activeFiltersCount > 0 ? 'var(--accent-color)' : 'transparent',
               color: activeFiltersCount > 0 ? '#fff' : 'var(--text-main)',
               border: `1px solid ${activeFiltersCount > 0 ? 'var(--accent-color)' : 'var(--border-color)'}`,
-              padding: '8px 16px', borderRadius: '8px', cursor: 'pointer',
-              fontWeight: '600', fontSize: '13px', transition: 'all 0.2s'
+              padding: '6px 14px', borderRadius: '6px', cursor: 'pointer',
+              fontWeight: '500', fontSize: '13px', transition: 'all 0.2s'
             }}
           >
             <FilterIcon />
             Filtros
             {activeFiltersCount > 0 && (
-              <span style={{ background: '#fff', color: 'var(--accent-color)', padding: '2px 6px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold' }}>
+              <span style={{ background: '#fff', color: 'var(--accent-color)', padding: '1px 6px', borderRadius: '10px', fontSize: '11px', fontWeight: '600' }}>
                 {activeFiltersCount}
               </span>
             )}
@@ -188,10 +188,10 @@ export default function Topbar({
                 <>
                   <div
                     className="search-result-item"
-                    style={{ cursor: 'default', paddingTop: '10px', paddingBottom: '6px', background: 'var(--bg-hover)' }}
+                    style={{ cursor: 'default', paddingTop: '8px', paddingBottom: '4px', background: 'var(--bg-hover)' }}
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       <BuildingIcon /> Contas
                     </div>
                   </div>

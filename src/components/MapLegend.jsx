@@ -22,19 +22,19 @@ export default function MapLegend({ categories, selectedCategories, onToggleCate
         bottom: '24px',
         left: '24px',
         zIndex: 1000,
-        background: isDarkMode ? 'rgba(15, 23, 42, 0.92)' : 'rgba(255, 255, 255, 0.92)',
+        background: isDarkMode ? 'rgba(15, 23, 42, 0.94)' : 'rgba(255, 255, 255, 0.94)',
         backdropFilter: 'blur(8px)',
         border: `1px solid ${isDarkMode ? '#334155' : '#e2e8f0'}`,
-        borderRadius: '12px',
-        padding: isMinimized ? '8px 14px' : '14px 16px',
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)',
-        maxWidth: '280px',
-        maxHeight: isMinimized ? 'auto' : '260px',
+        borderRadius: '10px',
+        padding: isMinimized ? '8px 14px' : '12px 14px',
+        boxShadow: '0 8px 20px -4px rgba(0, 0, 0, 0.1)',
+        maxWidth: '260px',
+        maxHeight: isMinimized ? 'auto' : '240px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px',
-        fontFamily: 'sans-serif',
-        transition: 'all 0.3s ease'
+        gap: '6px',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        transition: 'all 0.2s ease'
       }}
     >
       <div
@@ -49,17 +49,17 @@ export default function MapLegend({ categories, selectedCategories, onToggleCate
       >
         <span
           style={{
-            fontSize: '12px',
-            fontWeight: '700',
+            fontSize: '11px',
+            fontWeight: '600',
             color: isDarkMode ? '#f8fafc' : '#0f172a',
-            letterSpacing: '0.03em',
+            letterSpacing: '0.04em',
             textTransform: 'uppercase',
             display: 'flex',
             alignItems: 'center',
             gap: '6px'
           }}
         >
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00A950' }}></span>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00A950' }}></span>
           Legenda de Categorias ({categories.length})
         </span>
         <button
@@ -68,11 +68,11 @@ export default function MapLegend({ categories, selectedCategories, onToggleCate
             border: 'none',
             color: isDarkMode ? '#94a3b8' : '#64748b',
             cursor: 'pointer',
-            fontSize: '12px',
+            fontSize: '11px',
             padding: '2px 4px'
           }}
         >
-          {isMinimized ? '▲' : '▼'}
+          {isMinimized ? '+' : '−'}
         </button>
       </div>
 
@@ -81,9 +81,9 @@ export default function MapLegend({ categories, selectedCategories, onToggleCate
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '6px',
+            gap: '4px',
             overflowY: 'auto',
-            paddingRight: '4px',
+            paddingRight: '2px',
             marginTop: '4px'
           }}
         >
@@ -99,31 +99,30 @@ export default function MapLegend({ categories, selectedCategories, onToggleCate
                   display: 'flex',
                   alignItems: 'center',
                   justify: 'space-between',
-                  padding: '4px 8px',
+                  padding: '4px 6px',
                   borderRadius: '6px',
                   cursor: 'pointer',
-                  opacity: isSelected ? 1 : 0.4,
+                  opacity: isSelected ? 1 : 0.45,
                   background: isSelected
                     ? (isDarkMode ? 'rgba(51, 65, 85, 0.4)' : 'rgba(241, 245, 249, 0.8)')
                     : 'transparent',
-                  transition: 'all 0.2s'
+                  transition: 'all 0.15s'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
                   <div
                     style={{
-                      width: '12px',
-                      height: '12px',
+                      width: '10px',
+                      height: '10px',
                       borderRadius: '50%',
                       background: color,
-                      flexShrink: 0,
-                      boxShadow: `0 0 6px ${color}80`
+                      flexShrink: 0
                     }}
                   />
                   <span
                     style={{
                       fontSize: '12px',
-                      fontWeight: isSelected ? '600' : '400',
+                      fontWeight: isSelected ? '500' : '400',
                       color: isDarkMode ? '#e2e8f0' : '#1e293b',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -137,7 +136,7 @@ export default function MapLegend({ categories, selectedCategories, onToggleCate
                 <span
                   style={{
                     fontSize: '11px',
-                    fontWeight: '700',
+                    fontWeight: '600',
                     color: isDarkMode ? '#94a3b8' : '#64748b',
                     marginLeft: '8px'
                   }}
