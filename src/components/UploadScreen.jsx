@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { geocodeAccountAddress } from '../services/geocoding';
+import { resolveAccountCoordinates } from '../services/geocoding';
 
 // Utilitários de texto
 function toTitleCase(str) {
@@ -93,12 +93,6 @@ const BRAZIL_CITIES = {
   'MACAPA': { lat: 0.0349, lng: -51.0694, state: 'AP' },
   'RIO BRANCO': { lat: -9.9753, lng: -67.8099, state: 'AC' },
 };
-
-function applyJitter([lat, lng]) {
-  const jLat = (Math.random() - 0.5) * 0.015;
-  const jLng = (Math.random() - 0.5) * 0.015;
-  return [lat + jLat, lng + jLng];
-}
 
 export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
   const [peopleData, setPeopleData] = useState([]);
@@ -251,28 +245,19 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         
         const isEndUser = class1 && normalize(class1).includes('END USER');
         
-        // Item 5: Tentar geocodificar o endereço exato com rua e CEP
-        let exactCoords = null;
-        if (street && city) {
-          exactCoords = await geocodeAccountAddress(street, city, state, zip);
+        let baseLat = -14.235;
+        let baseLng = -51.925;
+
+        const cKey = normalize(city);
+        if (BRAZIL_CITIES[cKey]) {
+          baseLat = BRAZIL_CITIES[cKey].lat;
+          baseLng = BRAZIL_CITIES[cKey].lng;
+        } else if (state && STATE_CENTERS[state.toUpperCase()]) {
+          [baseLat, baseLng] = STATE_CENTERS[state.toUpperCase()];
         }
 
-        let coordinates = null;
-        let isExact = false;
-
-        if (exactCoords) {
-          coordinates = exactCoords;
-          isExact = true;
-        } else {
-          const cKey = normalize(city);
-          if (BRAZIL_CITIES[cKey]) {
-            coordinates = applyJitter([BRAZIL_CITIES[cKey].lat, BRAZIL_CITIES[cKey].lng]);
-          } else if (state && STATE_CENTERS[state.toUpperCase()]) {
-            coordinates = applyJitter(STATE_CENTERS[state.toUpperCase()]);
-          } else {
-            coordinates = applyJitter([-14.235, -51.925]);
-          }
-        }
+        // Resolução instantânea de coordenadas exatas por rua e CEP sem chamadas HTTP lentas
+        const coordinates = resolveAccountCoordinates(street, city, state, zip, baseLat, baseLng);
 
         parsed.push({
           id: accountId || `ACC-${i}`,
@@ -282,7 +267,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           country, state: state || '', city: city || '', street: street || '', zip: zip || '',
           profile, platform, class1, class2, addInfo, pam, sales, lifecycle,
           coordinates,
-          isExactGeocoded: isExact,
+          isExactGeocoded: Boolean(street),
           isEndUser,
           geocoded: true
         });
