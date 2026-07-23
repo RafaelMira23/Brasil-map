@@ -151,6 +151,11 @@ function App() {
     selectedSegments.length + selectedSubSegments.length + selectedClass1.length + selectedClass2.length +
     (onlyWithAccounts ? 1 : 0) + (onlyWithCategory ? 1 : 0) + (includeNonSJobCodes ? 1 : 0);
 
+  // Qualquer filtro de pessoa ativo → modo "mostrar tudo no Brasil"
+  const hasActiveFilters = selectedStates.length > 0 || selectedCities.length > 0 ||
+    selectedCategories.length > 0 || onlyWithAccounts || onlyWithCategory ||
+    includeNonSJobCodes || searchQuery.trim().length > 0;
+
   const handleSelectPerson = (p) => {
     setSelectedPerson(p);
     setSelectedAccount(null);
@@ -238,6 +243,7 @@ function App() {
         mapMode={mapMode}
         selectedCategories={selectedCategories}
         onToggleCategoryFilter={handleToggleCategoryFilter}
+        hasActiveFilters={hasActiveFilters}
       />
 
       <DetailsPanel

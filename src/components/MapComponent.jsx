@@ -293,7 +293,8 @@ export default function MapComponent({
   STATE_CENTERS,
   mapMode = 'people',
   selectedCategories = [],
-  onToggleCategoryFilter
+  onToggleCategoryFilter,
+  hasActiveFilters = false
 }) {
   const [geojsonData, setGeojsonData] = useState(null);
   const [geojsonError, setGeojsonError] = useState(false);
@@ -336,15 +337,26 @@ export default function MapComponent({
     }
   }, [clickedState, onStateDeselect]);
 
-  // Bolhas por estado — renderiza na carga inicial sem necessidade de clicar
+  // -----------------------------------------------------------------------
+  // Lógica de visibilidade das bolhas (mapa de pessoas):
+  //   - Sem filtro + sem estado clicado  → mapa limpo
+  //   - Sem filtro + estado clicado      → bolhas só do estado clicado
+  //   - Qualquer filtro ativo            → bolhas de todo o Brasil
+  // -----------------------------------------------------------------------
+
   const stateLayerData = useMemo(() => {
     if (currentZoom > 5 || mapMode !== 'people') return [];
+    // Sem filtro e sem estado clicado → não mostra nada
+    if (!hasActiveFilters && !clickedState) return [];
+
     const groups = {};
     data.forEach(p => {
       if (!p.state) return;
       const uf = p.state;
-      const cats = p.allCategories && p.allCategories.length > 0 ? p.allCategories : ['Sem Categoria'];
+      // Sem filtro → mostra apenas o estado clicado
+      if (!hasActiveFilters && uf !== clickedState) return;
 
+      const cats = p.allCategories && p.allCategories.length > 0 ? p.allCategories : ['Sem Categoria'];
       cats.forEach(catAcr => {
         const key = `${uf}-${catAcr}`;
         if (!groups[key]) {
@@ -361,15 +373,20 @@ export default function MapComponent({
       });
     });
     return Object.values(groups);
-  }, [data, currentZoom, mapMode, STATE_CENTERS]);
+  }, [data, currentZoom, mapMode, STATE_CENTERS, hasActiveFilters, clickedState]);
 
   const cityClusters = useMemo(() => {
     if (currentZoom < 6 || mapMode !== 'people') return [];
+    // Sem filtro e sem estado clicado → não mostra nada
+    if (!hasActiveFilters && !clickedState) return [];
+
     const groups = {};
     data.forEach(p => {
       if (!p.city || !p.state || !isValidCoord(p.coordinates)) return;
-      const cats = p.allCategories && p.allCategories.length > 0 ? p.allCategories : ['Sem Categoria'];
+      // Sem filtro → mostra apenas cidades do estado clicado
+      if (!hasActiveFilters && p.state !== clickedState) return;
 
+      const cats = p.allCategories && p.allCategories.length > 0 ? p.allCategories : ['Sem Categoria'];
       cats.forEach(catAcr => {
         const key = `${p.city}-${p.state}-${catAcr}`;
         if (!groups[key]) {
@@ -387,7 +404,7 @@ export default function MapComponent({
       });
     });
     return Object.values(groups);
-  }, [data, currentZoom, mapMode]);
+  }, [data, currentZoom, mapMode, hasActiveFilters, clickedState]);
 
   // Contas do responsável selecionado (modo pessoas)
   const selectedPersonOpps = useMemo(() => {
