@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// SVGs to replace emojis
 const SearchIcon = () => (
   <svg className="icon search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -25,10 +24,15 @@ const FilterIcon = () => (
   </svg>
 );
 
-// Ícone simples para diferenciar visualmente o resultado de "conta" do de "pessoa"
 const BuildingIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1" />
+  </svg>
+);
+
+const PeopleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
   </svg>
 );
 
@@ -42,7 +46,9 @@ export default function Topbar({
   isDarkMode,
   toggleDarkMode,
   onOpenFilters,
-  activeFiltersCount
+  activeFiltersCount,
+  mapMode,
+  setMapMode
 }) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -54,6 +60,58 @@ export default function Topbar({
   return (
     <div className="topbar">
       <div className="topbar-main">
+        
+        {/* Item 4: Mudar modo de visão do mapa (Pessoas vs Contas) */}
+        <div
+          style={{
+            display: 'flex',
+            background: 'var(--bg-hover)',
+            padding: '3px',
+            borderRadius: '10px',
+            border: '1px solid var(--border-color)',
+            gap: '2px'
+          }}
+        >
+          <button
+            onClick={() => setMapMode('people')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: 'none',
+              background: mapMode === 'people' ? 'var(--accent-color)' : 'transparent',
+              color: mapMode === 'people' ? '#fff' : 'var(--text-main)',
+              fontWeight: '700',
+              fontSize: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            <PeopleIcon /> Pessoas
+          </button>
+          <button
+            onClick={() => setMapMode('accounts')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: 'none',
+              background: mapMode === 'accounts' ? '#8b5cf6' : 'transparent',
+              color: mapMode === 'accounts' ? '#fff' : 'var(--text-main)',
+              fontWeight: '700',
+              fontSize: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            <BuildingIcon /> Contas
+          </button>
+        </div>
+
         <div className="search-input-wrapper">
           <SearchIcon />
           <input 
@@ -120,7 +178,7 @@ export default function Topbar({
                     {person.nNumber} · {person.city}
                   </div>
                   <div className="result-meta">
-                    <span className="result-cat" style={{ color: person.category?.color }}>{person.category?.acronym}</span>
+                    <span className="result-cat">{person.allCategories?.join(' · ')}</span>
                     {person.state}
                   </div>
                 </div>

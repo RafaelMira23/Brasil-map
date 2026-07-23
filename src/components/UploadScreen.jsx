@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
+import { geocodeAccountAddress } from '../services/geocoding';
 
 // Utilitários de texto
 function toTitleCase(str) {
@@ -14,15 +15,6 @@ function normalize(str) {
   return (str || '').toString().trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-function normalizeCompact(str) {
-  return normalize(str).replace(/\s+/g, '');
-}
-
-// Gera uma chave canônica de nome, imune a:
-// - "SOBRENOME, NOME" vs "Nome Sobrenome" (vírgula é removida antes de tudo)
-// - ordem das palavras (as partes são ordenadas alfabeticamente)
-// - maiúsculas/minúsculas e acentos (mesmo tratamento de normalize())
-// Ex: "SILVA, JOÃO" e "João Silva" e "SILVA JOAO" todos viram "JOAOSILVA"
 function normalizeNameKey(str) {
   const clean = (str || '')
     .toString()
@@ -102,18 +94,9 @@ const BRAZIL_CITIES = {
   'RIO BRANCO': { lat: -9.9753, lng: -67.8099, state: 'AC' },
 };
 
-function stringToColor(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const h = Math.abs(hash) % 360;
-  return `hsl(${h}, 70%, 50%)`;
-}
-
 function applyJitter([lat, lng]) {
-  const jLat = (Math.random() - 0.5) * 0.03;
-  const jLng = (Math.random() - 0.5) * 0.03;
+  const jLat = (Math.random() - 0.5) * 0.015;
+  const jLng = (Math.random() - 0.5) * 0.015;
   return [lat + jLat, lng + jLng];
 }
 
@@ -149,7 +132,6 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           try {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
-            // Lê TODAS as abas, não só a primeira — resolve o problema do item 2 também
             let allRows = [];
             workbook.SheetNames.forEach(sheetName => {
               const sheetJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
@@ -182,8 +164,8 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         const manager = getField(row, ['Manager Full Name']);
         const rawCity = getField(row, ['City of Work']);
         const catSec = getField(row, ['Categoria']) || '';
+        const specCode = getField(row, ['Specialization Code', 'Specialization', 'Job Code', 'JobCode']) || '';
         
-        // Pega "De quê?" com todas as variações possíveis
         const deQue = getField(row, ['De quê?', 'De que?', 'De quê', 'De que', 'De Quê?', 'De Que?']);
 
         const cityKey = normalize(rawCity);
@@ -196,24 +178,19 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           state = cityMatch.state;
           coordinates = [cityMatch.lat, cityMatch.lng];
         } else if (rawCity) {
-          // Cidade desconhecida — coloca no centro do Brasil mas não pula
           state = 'XX';
           coordinates = [-14.235, -51.925];
         } else {
-          return; // Pula se não tem cidade nenhuma
+          return;
         }
 
-        // Separa categorias por " - " ou "-"
-        const primaryCategories = deQue 
+        const categoriesList = deQue 
           ? String(deQue).split(/\s*-\s*/).map(s => s.trim()).filter(Boolean) 
           : [];
-        if (primaryCategories.length === 0) primaryCategories.push('Sem Categoria');
+        if (categoriesList.length === 0) categoriesList.push('Sem Categoria');
 
-        const mainCatStr = primaryCategories[0];
-        const categoryObj = {
-          acronym: mainCatStr,
-          color: stringToColor(mainCatStr)
-        };
+        const specStr = String(specCode).trim().toUpperCase();
+        const hasJobCodeS = specStr.startsWith('S');
 
         parsed.push({
           id, nNumber: id, name, 
@@ -221,9 +198,10 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
           email, managerName: manager,
           city: rawCity ? toTitleCase(rawCity) : 'Não Mapeada',
           state, coordinates,
-          category: categoryObj,
-          allCategories: primaryCategories,
+          allCategories: categoriesList,
           subcategory: catSec,
+          specializationCode: specCode,
+          hasJobCodeS,
           geocoded: true
         });
       });
@@ -241,7 +219,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
-    setLoadingText('Mapeando Contas...');
+    setLoadingText('Mapeando Contas e geolocalizando endereços exatos...');
     try {
       const json = await parseExcel(file);
       const parsed = [];
@@ -253,52 +231,67 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
         const accountId = getField(row, ['Account ID - 18 characters', 'Account ID']);
         const segment = getField(row, ['Market Segment']);
         const subSegment = getField(row, ['Market Sub-Segment']);
-        const owner = getField(row, ['Account Owner']);
+        const owner = getField(row, ['Account Owner', 'Responsavel']);
         const country = getField(row, ['Country']);
-        const state = getField(row, ['State/Province']);
+        const state = getField(row, ['State/Province', 'State']);
         const city = getField(row, ['City']);
         const street = getField(row, ['Street']);
-        const zip = getField(row, ['Zip/Postal Code', 'Zip Code']);
+        const zip = getField(row, ['Zip/Postal Code', 'Zip Code', 'Zip']);
         const profile = getField(row, ['Account Master Profile']);
         const platform = getField(row, ['Platforming zones']);
         const class1 = getField(row, ['Classification Level 1']);
         const class2 = getField(row, ['Classification Level 2']);
         const addInfo = getField(row, ['Local Address Additional Information']);
+        const pam = getField(row, ['Total PAM (converted)', 'Total PAM']);
+        const sales = getField(row, ['Total Sales']);
+        const lifecycle = getField(row, ['Account Lifecycle']);
 
-        if (!accountName) continue;
+        // Item 6: Se uma conta não tem responsável, nem precisa mostrar ela
+        if (!accountName || !owner || !String(owner).trim()) continue;
         
-        // Se level 1 é End User, não mostra
         const isEndUser = class1 && normalize(class1).includes('END USER');
         
-        // Calcular coordenadas a partir da cidade
-        let coordinates = null;
-        const cKey = normalize(city);
-        if (BRAZIL_CITIES[cKey]) {
-          coordinates = [BRAZIL_CITIES[cKey].lat, BRAZIL_CITIES[cKey].lng];
-        } else if (state && STATE_CENTERS[state.toUpperCase()]) {
-          coordinates = STATE_CENTERS[state.toUpperCase()];
-        } else {
-          coordinates = [-14.235, -51.925];
+        // Item 5: Tentar geocodificar o endereço exato com rua e CEP
+        let exactCoords = null;
+        if (street && city) {
+          exactCoords = await geocodeAccountAddress(street, city, state, zip);
         }
 
-        const jitteredCoords = applyJitter(coordinates);
+        let coordinates = null;
+        let isExact = false;
+
+        if (exactCoords) {
+          coordinates = exactCoords;
+          isExact = true;
+        } else {
+          const cKey = normalize(city);
+          if (BRAZIL_CITIES[cKey]) {
+            coordinates = applyJitter([BRAZIL_CITIES[cKey].lat, BRAZIL_CITIES[cKey].lng]);
+          } else if (state && STATE_CENTERS[state.toUpperCase()]) {
+            coordinates = applyJitter(STATE_CENTERS[state.toUpperCase()]);
+          } else {
+            coordinates = applyJitter([-14.235, -51.925]);
+          }
+        }
 
         parsed.push({
           id: accountId || `ACC-${i}`,
           name: accountName,
           segment, subSegment, 
           owner, ownerNormalized: normalizeNameKey(owner),
-          country, state, city: city || '', street, zip,
-          profile, platform, class1, class2, addInfo,
-          coordinates: jitteredCoords,
+          country, state: state || '', city: city || '', street: street || '', zip: zip || '',
+          profile, platform, class1, class2, addInfo, pam, sales, lifecycle,
+          coordinates,
+          isExactGeocoded: isExact,
           isEndUser,
-          geocoded: false
+          geocoded: true
         });
       }
 
       setOppData(parsed);
-      alert(`${parsed.length} Contas importadas com sucesso!`);
+      alert(`${parsed.length} Contas ativas com responsáveis importadas com sucesso!`);
     } catch (err) {
+      console.error(err);
       alert('Erro ao carregar contas. Verifique se o arquivo é um .xlsx válido.');
     } finally {
       setLoading(false);
@@ -316,7 +309,7 @@ export default function UploadScreen({ onDataLoaded, STATE_CENTERS }) {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f8fafc', padding: '20px', fontFamily: 'sans-serif' }}>
       <div style={{ background: '#fff', padding: '40px', borderRadius: '16px', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)', textAlign: 'center', maxWidth: '600px', width: '100%' }}>
         <h1 style={{ fontSize: '28px', color: '#0f172a', marginBottom: '8px', fontWeight: '800' }}>Brasil Map</h1>
-        <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '40px' }}>Carregue as bases de dados para visualização geográfica</p>
+        <p style={{ fontSize: '15px', color: '#64748b', marginBottom: '40px' }}>Carregue as bases de dados de Pessoas e Contas para visualização no mapa</p>
 
         {loading ? (
           <div style={{ padding: '40px 0' }}>
